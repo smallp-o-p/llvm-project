@@ -750,6 +750,8 @@ set(files
   __system_error/error_condition.h
   __system_error/system_error.h
   __system_error/throw_system_error.h
+  __text_encoding/encoding_data.h
+  __text_encoding/text_encoding.h
   __thread/formatter.h
   __thread/id.h
   __thread/jthread.h
@@ -1062,6 +1064,7 @@ set(files
   syncstream
   system_error
   tgmath.h
+  text_encoding
   thread
   tuple
   type_traits
