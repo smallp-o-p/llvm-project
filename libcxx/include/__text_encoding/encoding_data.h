@@ -6,8 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
+#ifndef _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
+#  error "__text_encoding/encoding_data.h is a private implementation header, do not include it directly!"
+#endif
+
 #ifndef _LIBCPP___TEXT_ENCODING_ENCODING_DATA_H
-#define _LIBCPP___TEXT_ENCODING_ENCODING_DATA_H
+#  define _LIBCPP___TEXT_ENCODING_ENCODING_DATA_H
 {3, "ANSI_X3.4-1986"},
 {3, "IBM367"},
 {3, "ISO646-US"},
@@ -893,5 +897,5 @@
 {2259, "csTIS620"},
 {2260, "CP50220"},
 {2260, "csCP50220"},
-#endif 
+#endif
 #undef _LIBCPP___TEXT_ENCODING_ENCODING_DATA_H
