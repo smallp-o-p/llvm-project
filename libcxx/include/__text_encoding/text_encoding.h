@@ -15,14 +15,12 @@
 #include <__algorithm/min.h>
 #include <__config>
 #include <__functional/hash.h>
+#include <__iterator/iterator_traits.h>
 #include <__locale_dir/locale_base_api.h>
-#include <algorithm>
+#include <__string/char_traits.h>
 #include <cstdint>
+#include <langinfo.h>
 #include <string_view>
-
-#if defined(__APPLE__) || defined(__unix__)
-#  include <langinfo.h>
-#endif
 
 _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
@@ -36,15 +34,15 @@ struct text_encoding {
 private:
   struct __encoding_data {
     using __id_rep = int_least32_t;
-    __id_rep __n_id;
+    __id_rep __mib_rep;
     const char* __name;
 
     friend constexpr bool operator==(const __encoding_data& __e, const __encoding_data& __other) _NOEXCEPT {
-      return __e.__n_id == __other.__n_id || __comp_name(__e.__name, __other.__name);
+      return __e.__mib_rep == __other.__mib_rep || __comp_name(__e.__name, __other.__name);
     }
 
     friend constexpr bool operator<(const __encoding_data& __e, const __id_rep __i) _NOEXCEPT {
-      return __e.__n_id < __i;
+      return __e.__mib_rep < __i;
     }
   };
 
@@ -316,124 +314,142 @@ public:
   using enum id;
 
   _LIBCPP_HIDE_FROM_ABI constexpr text_encoding() = default;
-  _LIBCPP_HIDE_FROM_ABI constexpr explicit text_encoding(string_view __enc) _NOEXCEPT : text_encoding(__enc, __find_encoding_data_id(__enc)){}
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit text_encoding(string_view __enc) _NOEXCEPT
+      : __encoding_rep(__find_encoding_data(__enc)) {
+    __enc.copy(__name, max_name_length, 0);
+  }
   _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(id __i) _NOEXCEPT : text_encoding({}, __i) {}
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const _NOEXCEPT { return __mib; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const _NOEXCEPT { return id(__encoding_rep->__mib_rep); }
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* name() const _NOEXCEPT { return __name; }
 
   // [text.encoding.aliases], class text_encoding​::​aliases_view
   struct aliases_view : ranges::view_interface<aliases_view> {
     constexpr aliases_view() = default;
-    constexpr aliases_view(__encoding_data::__id_rep __mib) : __mib(__mib) {}
-
+    constexpr aliases_view(const __encoding_data* __d) : __d(__d) {}
+    struct __end_sentinel {};
     struct __iterator {
       using value_type        = const char*;
       using reference         = const char*;
       using iterator_category = random_access_iterator_tag;
       using difference_type   = ptrdiff_t;
 
-      constexpr __iterator()                  = default;
-      constexpr __iterator(const __iterator&) = default;
-      constexpr __iterator(__encoding_data::__id_rep __mib) : __mib(__mib) {
-        __d = __find_encoding_data_by_id(id(__mib));
+      _LIBCPP_HIDE_FROM_ABI constexpr value_type operator*() const {
+        return __can_dereference() ? __data->__name : "";
       }
 
-      constexpr const char* operator*() const { return __d->__name; }
-      constexpr const char* operator[](difference_type __n) const { return (__d + __n)->__name; }
-      constexpr __iterator& operator++() {
-        __d++;
+      _LIBCPP_HIDE_FROM_ABI constexpr value_type operator[](difference_type __n) const {
+        auto __it = *this;
+        __it += __n;
+        return *(__it + __n);
+      }
+
+      _LIBCPP_HIDE_FROM_ABI friend constexpr __iterator operator+(__iterator& __it, difference_type __n) {
+        return __it += __n;
+      }
+
+      _LIBCPP_HIDE_FROM_ABI friend constexpr __iterator operator+(difference_type __n, __iterator& __it) {
+        return __it += __n;
+      }
+
+      _LIBCPP_HIDE_FROM_ABI friend constexpr __iterator operator-(__iterator& __it, difference_type __n) {
+        return __it -= __n;
+      }
+
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator& operator++() {
+        __data++;
         return *this;
       }
 
-      constexpr __iterator operator++(__encoding_data::__id_rep) {
-        auto __c = *this;
-        __d++;
-        return __c;
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator operator++(int) {
+        auto __old = *this;
+        __data++;
+        return __old;
       }
 
-      constexpr __iterator& operator--() {
-        __d--;
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator& operator--() {
+        __data--;
         return *this;
       }
 
-      constexpr __iterator operator--(__encoding_data::__id_rep) {
-        auto __c = *this;
-        __d--;
-        return __c;
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator operator--(int) {
+        auto __old = *this;
+        __data--;
+        return __old;
       }
 
-      constexpr __iterator& operator+=(difference_type __n) {
-        __d += __n;
+      // Check if going past the encoding data list array and if the new index has the same id, if not then
+      // replace it with a sentinel "out-of-bounds" iterator.
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator& operator+=(difference_type __n) {
+        if (__data) [[__likely__]] {
+          if (__n > 0) {
+            if ((__data + __n) < std::end(__text_encoding_data) && __data[__n - 1].__mib_rep == __mib_rep)
+              __data += __n;
+            else
+              *this = __iterator{};
+          } else if (__n < 0) {
+            if ((__data - __n) > __text_encoding_data && __data[__n].__mib_rep == __mib_rep)
+              __data += __n;
+            else
+              *this = __iterator{};
+          }
+        }
         return *this;
       }
-      constexpr __iterator& operator-=(difference_type __n) {
-        __d -= __n;
-        return *this;
+
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator& operator-=(difference_type __n) { return operator+=(-__n); }
+
+      _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(__iterator __it) const {
+        return __data == __it.__data && __it.__mib_rep == __mib_rep;
       }
 
-      constexpr bool operator==(__iterator __it) const { return __mib == __it.__mib && __d == __it.__d; }
-      constexpr auto operator<=>(__iterator __it) const {
-        if (__mib <=> __it.__mib == 0)
-          return __mib <=> __it.__mib;
-        return __d <=> __it.__d;
+      _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(__end_sentinel __s) const {
+        return !__can_dereference();
       }
 
-      friend constexpr __iterator operator+(const __iterator& __it, difference_type __n) {
-        return __iterator{__it} += __n;
-      }
-      friend constexpr __iterator operator+(difference_type __n, const __iterator& __it) {
-        return __iterator{__it} += __n;
-      }
-      friend constexpr __iterator operator-(const __iterator& __it, difference_type __n) {
-        return __iterator{__it} -= __n;
-      }
-      friend constexpr difference_type operator-(const __iterator& __a, const __iterator& __b) {
-        return __a.__d - __b.__d;
-      }
+      _LIBCPP_HIDE_FROM_ABI constexpr auto operator<=>(__iterator __it) const { return __data <=> __it.__data; }
 
     private:
-      const __encoding_data* __d      = nullptr;
-      __encoding_data::__id_rep __mib = 0;
       friend struct aliases_view;
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator() = default;
+      _LIBCPP_HIDE_FROM_ABI constexpr __iterator(const __encoding_data* __enc_d)
+          : __data(__enc_d), __mib_rep(__enc_d ? __enc_d->__mib_rep : 0) {}
+
+      _LIBCPP_HIDE_FROM_ABI bool __can_dereference() const { return __data && __data->__mib_rep == __mib_rep; }
+
+      // default iterator is a sentinel
+      const __encoding_data* __data       = nullptr;
+      __encoding_data::__id_rep __mib_rep = 0;
     };
 
-    constexpr __iterator begin() const { return __iterator{__mib}; }
-    constexpr __iterator end() const {
-      auto __it = __iterator{__mib};
-      while (__it.__d->__name && __it.__d->__n_id == __mib)
-        ++__it;
-      return __it;
-    }
+    constexpr __iterator begin() const { return __iterator{__d}; }
+    constexpr __end_sentinel end() const { return __end_sentinel{}; }
 
   private:
-    __encoding_data::__id_rep __mib = 0;
+    const __encoding_data* __d = nullptr;
   };
 
-  _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const _NOEXCEPT {
-    return __name[0] ? aliases_view{__encoding_data::__id_rep(__mib)} : aliases_view{};
-  }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const _NOEXCEPT { return aliases_view{__encoding_rep}; }
 
   _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __a, const text_encoding& __b) _NOEXCEPT {
-    if (__a.__mib == id::other && __b.__mib == id::other) {
+    if (__a.mib() == id::other && __b.mib() == id::other)
       return __comp_name(__a.__name, __b.__name);
-    }
-    return __a.__mib == __b.__mib;
+
+    return __a.mib() == __b.mib();
   }
 
   _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __encoding, id __i) _NOEXCEPT {
-    return __i != id::other && __encoding.__mib == __i;
+    return __encoding.mib() == __i;
   }
 
 #  if __CHAR_BIT__ == 8
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding literal() _NOEXCEPT {
 #    ifdef __GNUC_EXECUTION_CHARSET_NAME
-    return text_encoding(
-        __GNUC_EXECUTION_CHARSET_NAME, id{__find_encoding_data(__GNUC_EXECUTION_CHARSET_NAME)->__n_id});
+    return text_encoding(__GNUC_EXECUTION_CHARSET_NAME);
 #    elif defined(__clang_literal_encoding__)
-    return text_encoding(__clang_literal_encoding__, id{__find_encoding_data_id(__clang_literal_encoding__)});
+    return text_encoding(__clang_literal_encoding__);
 #    elif defined(__clang__)
-    return text_encoding("UTF-8", id::UTF8);
+    return text_encoding(id::UTF8);
 #    else
     return {};
 #    endif
@@ -462,13 +478,10 @@ public:
   }
 
 #  else
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding
-  literal() = delete("Prerequisite for text_encoding::literal() : CHAR_BIT == 8");
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding
-  environment() = delete("Prerequisite for text_encoding::environment() : CHAR_BIT == 8");
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding literal() = delete;
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment()       = delete;
   template <id __i>
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool
-  environment_is() = delete("Prerequisite for text_encoding::environment_is() : CHAR_BIT == 8");
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() = delete;
 #  endif
 
   template <>
@@ -478,13 +491,11 @@ public:
 
 private:
   _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(const string_view __name_in, const id __i) _NOEXCEPT
-      : __mib(__i == id::unknown ? id::other : __i) {
-    if (__name_in.empty()) {
-      const auto __found = string_view(__find_encoding_data_by_id(__i)->__name);
-      std::copy_n(__found.begin(), __found.size(), __name);
-    } else {
-      std::copy_n(__name_in.begin(), std::min(__name_in.size(), max_name_length), __name);
-    }
+      : __encoding_rep(__find_encoding_data_by_id(__i)) {
+    if (__name_in.empty())
+      std::copy_n(__encoding_rep->__name, char_traits<char>::length(__encoding_rep->__name), __name);
+    else
+      __name_in.copy(__name, max_name_length, 0);
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr bool __comp_name(string_view __a, string_view __b) {
@@ -507,7 +518,7 @@ private:
     auto __a_ptr = __a.begin(), __b_ptr = __b.begin();
     bool __a_in_number = false, __b_in_number = false;
 
-    unsigned char __a_val, __b_val;
+    unsigned char __a_val = 255, __b_val = 255;
     for (;; __a_ptr++, __b_ptr++) {
       while ((__a_val = __map_char(*__a_ptr, __a_in_number)) == 255 && __a_ptr != __a.end())
         __a_ptr++;
@@ -522,41 +533,49 @@ private:
         return false;
     }
     return true;
+  }
 
-  } // exposition only
-
-  _LIBCPP_HIDE_FROM_ABI static constexpr id __find_encoding_data_id(string_view __a) {
-    auto __data_ptr = __enc_data + 2, __data_last = end(__enc_data);
+  _LIBCPP_HIDE_FROM_ABI static constexpr const __encoding_data* __find_encoding_data(string_view __a) {
+    auto __data_ptr = __text_encoding_data + 2, __data_last = end(__text_encoding_data);
 
     for (; __data_ptr != __data_last; __data_ptr++) {
       if (__comp_name(__a, __data_ptr->__name)) {
-        const auto __found_id = __data_ptr->__n_id;
-        while (__data_ptr[-1].__n_id == __found_id)
+        const auto __found_id = __data_ptr->__mib_rep;
+        while (__data_ptr[-1].__mib_rep == __found_id)
           __data_ptr--;
-        return id(__data_ptr->__n_id);
+        return __data_ptr;
       }
     }
 
-    return id::other; // other
+    return __data_ptr; // other
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __encoding_data* __find_encoding_data_by_id(id __i) {
-    auto __found = lower_bound(std::begin(__enc_data), end(__enc_data) - 1, __encoding_data::__id_rep(__i));
-    return __found != end(__enc_data) ? __found : nullptr;
+    auto __found =
+        lower_bound(std::begin(__text_encoding_data), end(__text_encoding_data) - 1, __encoding_data::__id_rep(__i));
+    return __found != end(__text_encoding_data) ? __found : nullptr;
   }
 
-  _LIBCPP_HIDE_FROM_ABI static constexpr __encoding_data __enc_data[] = {
+  _LIBCPP_HIDE_FROM_ABI static constexpr __encoding_data __text_encoding_data[] = {
       {1, ""},
       {2, ""},
 #  include "encoding_data.h"
-      {0, nullptr}};
+      {0, nullptr} // sentinel
+  };
 
-  id __mib                         = id::unknown; // exposition only
-  char __name[max_name_length + 1] = {0};         // exposition only
-
+  const __encoding_data* __encoding_rep = nullptr;
+  char __name[max_name_length + 1]      = {0};
 };
 
+namespace ranges {
+
+template <>
+inline constexpr bool enable_borrowed_range<text_encoding::aliases_view> = true;
+
+} // namespace ranges
+
 _LIBCPP_END_NAMESPACE_STD
+
 #endif // _LIBCPP_STD_VER >= 26
 _LIBCPP_POP_MACROS
 #endif // _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
