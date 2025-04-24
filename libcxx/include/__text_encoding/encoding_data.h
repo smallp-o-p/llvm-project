@@ -6,6 +6,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
 #ifndef _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
 #  error "__text_encoding/encoding_data.h is a private implementation header, do not include it directly!"
 #endif
@@ -545,6 +549,14 @@
 {2009, "850"},
 {2009, "cp850"},
 {2009, "csPC850Multilingual"},
+{2010, "IBM852"},
+{2010, "852"},
+{2010, "cp852"},
+{2010, "csPCp852"},
+{2011, "IBM437"},
+{2011, "437"},
+{2011, "cp437"},
+{2011, "csPC8CodePage437"},
 {2012, "PC8-Danish-Norwegian"},
 {2012, "csPC8DanishNorwegian"},
 {2013, "IBM862"},
@@ -647,10 +659,6 @@
 {2043, "cp424"},
 {2043, "csIBM424"},
 {2043, "ebcdic-cp-he"},
-{2011, "IBM437"},
-{2011, "437"},
-{2011, "cp437"},
-{2011, "csPC8CodePage437"},
 {2044, "IBM500"},
 {2044, "CP500"},
 {2044, "csIBM500"},
@@ -660,10 +668,6 @@
 {2045, "851"},
 {2045, "cp851"},
 {2045, "csIBM851"},
-{2010, "IBM852"},
-{2010, "852"},
-{2010, "cp852"},
-{2010, "csPCp852"},
 {2046, "IBM855"},
 {2046, "855"},
 {2046, "cp855"},
