@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_TEXT_ENCODING_
-#define _LIBCPP_TEXT_ENCODING_
+#ifndef _LIBCPP_TEXT_ENCODING
+#define _LIBCPP_TEXT_ENCODING
 
 
 /* text_encoding synopsis 
@@ -57,7 +57,6 @@ struct text_encoding
 }
 
 */
-
 #include <__config>
 
 #if _LIBCPP_STD_VER >= 26 && _LIBCPP_HAS_LOCALIZATION
@@ -66,6 +65,6 @@ struct text_encoding
 
 #include <version> 
 
-#endif // _LIBCPP_TEXT_ENCODING_ 
+#endif // _LIBCPP_TEXT_ENCODING 
 
 
