@@ -17,10 +17,18 @@
 #include <__functional/hash.h>
 #include <__iterator/iterator_traits.h>
 #include <__locale_dir/locale_base_api.h>
+#include <__ranges/view_interface.h>
 #include <__string/char_traits.h>
 #include <cstdint>
-#include <langinfo.h>
 #include <string_view>
+
+#if __has_include(<langinfo.h>)
+#  include <langinfo.h>
+#endif
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
 
 _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
@@ -318,7 +326,10 @@ public:
       : __encoding_rep(__find_encoding_data(__enc)) {
     __enc.copy(__name, max_name_length, 0);
   }
-  _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(id __i) _NOEXCEPT : text_encoding({}, __i) {}
+  _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(id __i) _NOEXCEPT : __encoding_rep(__find_encoding_data_by_id(__i)) {
+    if (__encoding_rep->__name[0] != '\0')
+      std::copy_n(__encoding_rep->__name, char_traits<char>::length(__encoding_rep->__name), __name);
+  }
 
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const _NOEXCEPT { return id(__encoding_rep->__mib_rep); }
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* name() const _NOEXCEPT { return __name; }
@@ -334,9 +345,7 @@ public:
       using iterator_category = random_access_iterator_tag;
       using difference_type   = ptrdiff_t;
 
-      _LIBCPP_HIDE_FROM_ABI constexpr value_type operator*() const {
-        return __can_dereference() ? __data->__name : "";
-      }
+      _LIBCPP_HIDE_FROM_ABI constexpr value_type operator*() const { return __can_dereference() ? __data->__name : ""; }
 
       _LIBCPP_HIDE_FROM_ABI constexpr value_type operator[](difference_type __n) const {
         auto __it = *this;
@@ -388,7 +397,7 @@ public:
             else
               *this = __iterator{};
           } else if (__n < 0) {
-            if ((__data - __n) > __text_encoding_data && __data[__n].__mib_rep == __mib_rep)
+            if ((__data + __n) > __text_encoding_data && __data[__n].__mib_rep == __mib_rep)
               __data += __n;
             else
               *this = __iterator{};
@@ -403,9 +412,7 @@ public:
         return __data == __it.__data && __it.__mib_rep == __mib_rep;
       }
 
-      _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(__end_sentinel __s) const {
-        return !__can_dereference();
-      }
+      _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(__end_sentinel) const { return !__can_dereference(); }
 
       _LIBCPP_HIDE_FROM_ABI constexpr auto operator<=>(__iterator __it) const { return __data <=> __it.__data; }
 
@@ -429,7 +436,9 @@ public:
     const __encoding_data* __d = nullptr;
   };
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const _NOEXCEPT { return aliases_view{__encoding_rep}; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const _NOEXCEPT {
+    return aliases_view{__encoding_rep};
+  }
 
   _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __a, const text_encoding& __b) _NOEXCEPT {
     if (__a.mib() == id::other && __b.mib() == id::other)
@@ -458,13 +467,13 @@ public:
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
     auto __make_locale = [](const char* __name) {
       text_encoding __enc{};
-      if (::locale_t __loc = __locale::__newlocale(LC_CTYPE_MASK, __name, static_cast<locale_t>(0))) {
-        if (const char* __codeset = ::nl_langinfo_l(CODESET, __loc)) {
+      if (::locale_t __loc = ::newlocale(LC_CTYPE_MASK, __name, static_cast<locale_t>(0))) {
+        if (const char* __codeset = nl_langinfo_l(CODESET, __loc)) {
           string_view __s(__codeset);
           if (__s.size() < max_name_length)
             __enc = text_encoding(__s);
         }
-        __locale::__freelocale(__loc);
+        ::freelocale(__loc);
       }
       return __enc;
     };
@@ -484,20 +493,7 @@ public:
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() = delete;
 #  endif
 
-  template <>
-  struct hash<text_encoding> {
-    size_t operator()(const text_encoding& __enc) const noexcept { return std::hash<text_encoding::id>()(__enc.mib()); }
-  };
-
 private:
-  _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(const string_view __name_in, const id __i) _NOEXCEPT
-      : __encoding_rep(__find_encoding_data_by_id(__i)) {
-    if (__name_in.empty())
-      std::copy_n(__encoding_rep->__name, char_traits<char>::length(__encoding_rep->__name), __name);
-    else
-      __name_in.copy(__name, max_name_length, 0);
-  }
-
   _LIBCPP_HIDE_FROM_ABI static constexpr bool __comp_name(string_view __a, string_view __b) {
     if (__a.empty() || __b.empty()) {
       return false;
@@ -509,8 +505,8 @@ private:
       if (__n == '0') {
         return __in_number ? '0' : 255;
       }
-      __in_number = __n <= '1' && __n <= '9';
-      return (__n >= '0' && __n <= '9') || (__n >= 'A' && __n <= 'Z') || (__n >= 'a' && __n <= 'z')
+      __in_number = __n >= '1' && __n <= '9';
+      return (__n >= '1' && __n <= '9') || (__n >= 'A' && __n <= 'Z') || (__n >= 'a' && __n <= 'z')
                ? __to_lower(__n)
                : 255;
     };
@@ -536,7 +532,7 @@ private:
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __encoding_data* __find_encoding_data(string_view __a) {
-    auto __data_ptr = __text_encoding_data + 2, __data_last = end(__text_encoding_data);
+    auto __data_ptr = __text_encoding_data + 2, __data_last = std::end(__text_encoding_data) - 1;
 
     for (; __data_ptr != __data_last; __data_ptr++) {
       if (__comp_name(__a, __data_ptr->__name)) {
@@ -547,13 +543,13 @@ private:
       }
     }
 
-    return __data_ptr; // other
+    return __text_encoding_data; // other
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __encoding_data* __find_encoding_data_by_id(id __i) {
-    auto __found =
-        lower_bound(std::begin(__text_encoding_data), end(__text_encoding_data) - 1, __encoding_data::__id_rep(__i));
-    return __found != end(__text_encoding_data) ? __found : nullptr;
+    auto __found = std::lower_bound(
+        std::begin(__text_encoding_data), std::end(__text_encoding_data) - 1, __encoding_data::__id_rep(__i));
+    return __found != std::end(__text_encoding_data) - 1 ? __found : __text_encoding_data + 1; // unknown
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr __encoding_data __text_encoding_data[] = {
@@ -563,8 +559,13 @@ private:
       {0, nullptr} // sentinel
   };
 
-  const __encoding_data* __encoding_rep = nullptr;
+  const __encoding_data* __encoding_rep = __text_encoding_data + 1;
   char __name[max_name_length + 1]      = {0};
+};
+
+template <>
+struct hash<text_encoding> {
+  size_t operator()(const text_encoding& __enc) const noexcept { return std::hash<text_encoding::id>()(__enc.mib()); }
 };
 
 namespace ranges {
