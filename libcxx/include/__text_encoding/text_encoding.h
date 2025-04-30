@@ -10,25 +10,24 @@
 #ifndef _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
 #define _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
 
+#include <__config>
+
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#  pragma GCC system_header
+#endif
+
+#if _LIBCPP_HAS_LOCALIZATION
+
 #include <__algorithm/copy_n.h>
 #include <__algorithm/lower_bound.h>
 #include <__algorithm/min.h>
-#include <__config>
 #include <__functional/hash.h>
 #include <__iterator/iterator_traits.h>
-#include <__locale_dir/locale_base_api.h>
 #include <__ranges/view_interface.h>
 #include <__string/char_traits.h>
 #include <cstdint>
 #include <string_view>
 
-#if __has_include(<langinfo.h>)
-#  include <langinfo.h>
-#endif
-
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#  pragma GCC system_header
-#endif
 
 _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
@@ -36,7 +35,7 @@ _LIBCPP_PUSH_MACROS
 #if _LIBCPP_STD_VER >= 26
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-struct text_encoding {
+struct _LIBCPP_EXPORTED_FROM_ABI text_encoding {
   static constexpr size_t max_name_length = 63;
 
 private:
@@ -464,22 +463,7 @@ public:
 #    endif
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
-    auto __make_locale = [](const char* __name) {
-      text_encoding __enc{};
-      if (::locale_t __loc = ::newlocale(LC_CTYPE_MASK, __name, static_cast<locale_t>(0))) {
-        if (const char* __codeset = nl_langinfo_l(CODESET, __loc)) {
-          string_view __s(__codeset);
-          if (__s.size() < max_name_length)
-            __enc = text_encoding(__s);
-        }
-        ::freelocale(__loc);
-      }
-      return __enc;
-    };
-
-    return __make_locale("");
-  }
+  [[nodiscard]] static text_encoding environment();
 
   template <id __i>
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() {
@@ -578,5 +562,9 @@ inline constexpr bool enable_borrowed_range<text_encoding::aliases_view> = true;
 _LIBCPP_END_NAMESPACE_STD
 
 #endif // _LIBCPP_STD_VER >= 26
+
 _LIBCPP_POP_MACROS
+
+#endif // _LIBCPP_HAS_LOCALIZATION
+
 #endif // _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
