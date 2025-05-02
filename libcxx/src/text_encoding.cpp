@@ -8,10 +8,6 @@
 
 #include <__config> 
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#  pragma GCC system_header
-#endif
-
 #include <__locale_dir/locale_base_api.h>
 
 #include <text_encoding> 
@@ -21,6 +17,8 @@
 #endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
+
+#if _LIBCPP_STD_VER >= 26
 
 #if __CHAR_BIT__ == 8
 
@@ -42,5 +40,7 @@ text_encoding text_encoding::environment() {
 }
 
 # endif  // __CHAR_BIT__ == 8
+
+#endif // _LIBCPP_STD_VER > 26
 
 _LIBCPP_END_NAMESPACE_STD
