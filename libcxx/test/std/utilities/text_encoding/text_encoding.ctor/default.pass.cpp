@@ -10,30 +10,27 @@
 
 // REQUIRES: std-at-least-c++26
 
-// UNSUPPORTED: no-localization
-
 // class text_encoding
 
 // text_encoding::text_encoding() noexcept
 
-// Concerns:
-// 1. Default constructor must be nothrow
-// 2. Default constructing a text_encoding object makes it so that mib() == id::unknown, and its name is empty
-
-#include <cassert>
-#include <cstring>
-#include <text_encoding>
-#include <type_traits>
+#include "test_text_encoding.h"
 
 int main(int, char**) {
+  // 1. Default constructor must be nothrow
   {
     static_assert(
         std::is_nothrow_default_constructible<std::text_encoding>::value, "Must be nothrow default constructible");
   }
 
+  // 2. Default constructing a text_encoding object makes it so that mib() == id::unknown, and its name is empty
   {
-    auto te = std::text_encoding();
+    constexpr auto te = std::text_encoding();
+    static_assert(te.mib() == std::text_encoding::id::unknown);
+    static_assert(std::string_view("").compare(te.name()) == 0);
     assert(te.mib() == std::text_encoding::id::unknown);
-    assert(strcmp(te.name(), "") == 0);
+    assert(std::string_view("").compare(te.name()) == 0);
   }
+
+  return 0;
 }
