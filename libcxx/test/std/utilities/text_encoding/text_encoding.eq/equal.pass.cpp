@@ -60,6 +60,6 @@ int main(int, char**) {
     assert(!(other_te1 == other_te2));
     static_assert(!(other_te1 == other_te2));
   }
-  
+
   return 0;
 }

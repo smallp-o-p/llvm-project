@@ -18,7 +18,7 @@
 #include <text_encoding>
 
 int main(int, char**) {
-  auto a_other = std::text_encoding("foobar");
+  auto a_other       = std::text_encoding("foobar");
   auto other_aliases = a_other.aliases();
 
   // 1. begin() of an aliases_view() of "other" is equal to end()

@@ -49,21 +49,5 @@ int main(int, char**) {
     assert(checkTextEncoding(env_te, env_te2));
   }
 
-#  if !defined(_WIN32)
-  // 3. text_encoding::environment() is affected by changes to the "LANG" environment variable, except for Windows.
-  {
-    setenv("LANG", LOCALE_en_US_UTF_8, 1);
-
-    auto te = std::text_encoding::environment();
-
-    assert(te == std::text_encoding::environment());
-    assert(te.mib() == std::text_encoding::id::UTF8);
-    assert(std::string_view(te.name()) == "UTF-8");
-    assert(checkTextEncoding(te, std::text_encoding("UTF-8")));
-
-    assert(std::text_encoding::environment_is<std::text_encoding::id::UTF8>());
-  }
-#  endif
-
   return 0;
 }

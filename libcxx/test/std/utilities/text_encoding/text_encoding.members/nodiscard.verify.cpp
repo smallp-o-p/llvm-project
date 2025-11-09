@@ -27,6 +27,10 @@ int main(int, char**) {
   te.name();
   // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
   te.aliases();
+  // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
+  std::text_encoding::environment();
+  // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
+  std::text_encoding::environment_is<std::text_encoding::UTF8>();
 
   // Clang does not emit a nodiscard warning for consteval functions with [[nodiscard]]: See issue #141536
   // expected-warning@+1 {{expression result unused}}

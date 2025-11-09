@@ -33,7 +33,7 @@ constexpr bool test_primary_encodings() {
 
 int main(int, char**) {
   // 1. operator==(const text_encoding&, id) must be noexcept
-  { 
+  {
     auto te = std::text_encoding();
     ASSERT_NOEXCEPT(te == id::UTF8);
   }
@@ -49,7 +49,7 @@ int main(int, char**) {
     constexpr auto te = std::text_encoding();
     static_assert(te == id::unknown);
   }
-  
+
   // 2.1
   {
     auto te = std::text_encoding(id::other);
@@ -57,7 +57,7 @@ int main(int, char**) {
   }
 
   // 2.1.1
-  { 
+  {
     constexpr auto te = std::text_encoding(id::other);
     static_assert(te == id::other);
   }
