@@ -237,10 +237,17 @@ __mbsrtowcs(wchar_t* __dest, const char** __src, size_t __len, mbstate_t* __ps, 
 }
 #  endif // _LIBCPP_HAS_WIDE_CHARACTERS
 
+#  ifdef __ANDROID__
+inline _LIBCPP_HIDE_FROM_ABI const char* __nl_langinfo_l(decltype(_LIBCPP_NL_CODESET) __item, __locale_t __loc) {
+  __locale_guard __current(__loc);
+  return ::nl_langinfo(__item, __loc);
+}
+#  else
 inline _LIBCPP_HIDE_FROM_ABI const char* __nl_langinfo_l(decltype(_LIBCPP_NL_CODESET) __item, __locale_t __loc) {
   return ::nl_langinfo_l(__item, __loc);
 }
-#endif   // _LIBCPP_BUILDING_LIBRARY
+#  endif
+#endif // _LIBCPP_BUILDING_LIBRARY
 
 #ifndef _LIBCPP_COMPILER_GCC // GCC complains that this can't be always_inline due to C-style varargs
 _LIBCPP_HIDE_FROM_ABI
