@@ -34,7 +34,6 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 struct __te_impl {
 private:
   friend struct text_encoding;
-  friend struct __te_env;
   enum class __id : int_least32_t {
     other                   = 1,
     unknown                 = 2,
@@ -524,6 +523,12 @@ private:
     return __te_impl();
 #  endif
   }
+
+  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
+#  if defined(_LIBCPP_WIN32API)
+  _LIBCPP_HIDDEN static __id __get_win32_acp();
+#  endif
+  _LIBCPP_HIDDEN static __te_impl __get_env_encoding();
 
   [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
