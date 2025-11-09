@@ -36,6 +36,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 struct __te_impl {
 private:
   friend struct text_encoding;
+  friend struct __te_env;
   enum class __id : int_least32_t {
     other                   = 1,
     unknown                 = 2,
@@ -401,7 +402,9 @@ private:
       std::copy_n(__encoding_rep_->__name_, __encoding_rep_->__name_size_, __name_);
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __id __mib() const noexcept { return __id(__encoding_rep_->__mib_rep_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __id __mib() const noexcept {
+    return __id(__encoding_rep_->__mib_rep_);
+  }
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* __name() const noexcept { return __name_; }
 
   // [text.encoding.aliases], class text_encoding::aliases_view
@@ -499,7 +502,9 @@ private:
     const __te_data* __view_data_;
   };
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view __aliases() const { return __aliases_view(__encoding_rep_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view __aliases() const {
+    return __aliases_view(__encoding_rep_);
+  }
 
   _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const __te_impl& __a, const __te_impl& __b) noexcept {
     return __a.__mib() == __id::other && __b.__mib() == __id::other
@@ -521,20 +526,15 @@ private:
     return __te_impl();
 #  endif
   }
-  
-  static __te_impl __get_env_encoding();
-  static __te_impl __get_locale_encoding(const char* __name);
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static __te_impl __environment() {
-    return __get_env_encoding();
-  }
+  [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
-  template<__id _Id>
+  template <__id _Id>
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
     return __environment() == _Id;
   }
 
-  const __te_data* __encoding_rep_  = __text_encoding_data + 1;
+  const __te_data* __encoding_rep_     = __text_encoding_data + 1;
   char __name_[__max_name_length_ + 1] = {0};
 
   _LIBCPP_HIDE_FROM_ABI static constexpr __te_data __text_encoding_data[] = {

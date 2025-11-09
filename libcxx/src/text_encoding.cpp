@@ -17,8 +17,16 @@
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
+// Shim to allow access to private members of __te_impl
+struct __te_env {
+  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
 #if defined(_LIBCPP_WIN32API)
-constexpr __te_impl::__id __get_win32_acp() {
+  _LIBCPP_HIDDEN static __te_impl::__id __get_win32_acp();
+#endif
+};
+
+#if defined(_LIBCPP_WIN32API)
+_LIBCPP_HIDDEN __te_impl::__id __te_env::__get_win32_acp() {
   switch (GetACP()) {
   case 037:
     return __te_impl::__id::IBM037;
@@ -210,24 +218,24 @@ constexpr __te_impl::__id __get_win32_acp() {
 }
 #endif // _LIBCPP_WIN32API
 
-__te_impl __te_impl::__get_locale_encoding(const char* __name){
+_LIBCPP_HIDDEN __te_impl __te_env::__get_locale_encoding(const char* __name) {
   __te_impl __e;
 
   __locale::__locale_t __l = __locale::__newlocale(_LIBCPP_CTYPE_MASK, __name, static_cast<__locale::__locale_t>(0));
-  
-  if(!__l){
+
+  if (!__l) {
     return __e;
   }
 
   const char* __codeset = __locale::__nl_langinfo_l(_LIBCPP_NL_CODESET, __l);
 
-  if(!__codeset){
-    return __e; 
+  if (!__codeset) {
+    return __e;
   }
 
   string_view __codeset_sv(__codeset);
-  
-  if(__codeset_sv.size() <= __te_impl::__max_name_length_){
+
+  if (__codeset_sv.size() <= __te_impl::__max_name_length_) {
     __e = __te_impl(__codeset_sv);
   }
 
@@ -236,12 +244,14 @@ __te_impl __te_impl::__get_locale_encoding(const char* __name){
   return __e;
 }
 
-__te_impl __te_impl::__get_env_encoding() {
+_LIBCPP_HIDDEN __te_impl __get_env_encoding() {
 #if defined(_LIBCPP_WIN32API)
-  return __get_win32_acp();
+  return __te_impl(__te_env::__get_win32_acp());
 #else
-  return __get_locale_encoding("");
+  return __te_env::__get_locale_encoding("");
 #endif // _LIBCPP_WIN32API
 }
+
+__te_impl __te_impl::__environment() { return __get_env_encoding(); }
 
 _LIBCPP_END_NAMESPACE_STD
