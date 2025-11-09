@@ -524,7 +524,7 @@ private:
 #  endif
   }
 
-#  if _LIBCPP_HAS_LOCALIZATION
+#  if _LIBCPP_HAS_LOCALIZATION && !defined(__ANDROID__)
   _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
 #  if defined(_LIBCPP_WIN32API)
   _LIBCPP_HIDDEN static __id __get_win32_acp();

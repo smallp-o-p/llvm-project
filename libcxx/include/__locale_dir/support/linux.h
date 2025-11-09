@@ -237,12 +237,8 @@ __mbsrtowcs(wchar_t* __dest, const char** __src, size_t __len, mbstate_t* __ps, 
 }
 #  endif // _LIBCPP_HAS_WIDE_CHARACTERS
 
-#  ifdef __ANDROID__
-inline _LIBCPP_HIDE_FROM_ABI const char* __nl_langinfo_l(decltype(_LIBCPP_NL_CODESET) __item, __locale_t __loc) {
-  __locale_guard __current(__loc);
-  return ::nl_langinfo(__item, __loc);
-}
-#  else
+// TODO: Android has langinfo.h but not nl_langinfo_l
+#  ifndef __ANDROID__
 inline _LIBCPP_HIDE_FROM_ABI const char* __nl_langinfo_l(decltype(_LIBCPP_NL_CODESET) __item, __locale_t __loc) {
   return ::nl_langinfo_l(__item, __loc);
 }

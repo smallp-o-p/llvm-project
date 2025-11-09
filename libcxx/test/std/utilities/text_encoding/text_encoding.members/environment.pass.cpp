@@ -12,6 +12,7 @@
 // REQUIRES: locale.en_US.UTF-8
 
 // UNSUPPORTED: no-localization
+// UNSUPPORTED: android
 
 // class text_encoding
 
