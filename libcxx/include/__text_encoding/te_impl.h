@@ -524,19 +524,19 @@ private:
 #  endif
   }
 
+#  if _LIBCPP_HAS_LOCALIZATION
   _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
 #  if defined(_LIBCPP_WIN32API)
   _LIBCPP_HIDDEN static __id __get_win32_acp();
 #  endif
   _LIBCPP_HIDDEN static __te_impl __get_env_encoding();
-
   [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
   template <__id _Id>
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
     return __environment() == _Id;
   }
-
+#  endif
   const __te_data* __encoding_rep_     = __text_encoding_data + 1;
   char __name_[__max_name_length_ + 1] = {0};
 
