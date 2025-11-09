@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
-#define _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
+#ifndef _LIBCPP__TEXT_ENCODING_TE_IMPL_H
+#define _LIBCPP__TEXT_ENCODING_TE_IMPL_H
 
 #include <__algorithm/copy_n.h>
 #include <__algorithm/find.h>
@@ -29,13 +29,14 @@
 _LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
-#if _LIBCPP_STD_VER >= 26
+#if _LIBCPP_STD_VER >= 23
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-struct text_encoding {
-public:
-  enum class id : int_least32_t {
+struct __te_impl {
+private:
+  friend struct text_encoding;
+  enum class __id : int_least32_t {
     other                   = 1,
     unknown                 = 2,
     ASCII                   = 3,
@@ -296,10 +297,9 @@ public:
     CP50220                 = 2260
   };
 
-  using enum id;
-  static constexpr size_t max_name_length = 63;
+  using enum __id;
+  static constexpr size_t __max_name_length_ = 63;
 
-private:
   struct __te_data {
     const char* __name_;
     int_least32_t __mib_rep_;
@@ -361,7 +361,7 @@ private:
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __te_data* __find_encoding_data(string_view __a) {
-    _LIBCPP_ASSERT(__a.size() <= max_name_length, "Passing encoding name longer than max_name_length!");
+    _LIBCPP_ASSERT(__a.size() <= __max_name_length_, "Passing encoding name longer than max_name_length!");
     const __te_data* __data_first = __text_encoding_data + 2;
     const __te_data* __data_last  = std::end(__text_encoding_data);
 
@@ -378,8 +378,8 @@ private:
     return __found_data;
   }
 
-  _LIBCPP_HIDE_FROM_ABI static constexpr const __te_data* __find_encoding_data_by_id(id __i) {
-    _LIBCPP_ASSERT(__i >= id::other && __i <= id::CP50220 && int_least32_t(__i) != 33 && int_least32_t(__i) != 34,
+  _LIBCPP_HIDE_FROM_ABI static constexpr const __te_data* __find_encoding_data_by_id(__id __i) {
+    _LIBCPP_ASSERT(__i >= __id::other && __i <= __id::CP50220 && int_least32_t(__i) != 33 && int_least32_t(__i) != 34,
                    "Passing invalid id to text_encoding constructor!");
     auto __found =
         std::lower_bound(std::begin(__text_encoding_data), std::end(__text_encoding_data), int_least32_t(__i));
@@ -389,24 +389,23 @@ private:
              : __text_encoding_data + 1; // unknown, should be unreachable
   }
 
-public:
-  _LIBCPP_HIDE_FROM_ABI constexpr text_encoding() = default;
+  _LIBCPP_HIDE_FROM_ABI constexpr __te_impl() = default;
 
-  _LIBCPP_HIDE_FROM_ABI constexpr explicit text_encoding(string_view __enc) noexcept
+  _LIBCPP_HIDE_FROM_ABI constexpr explicit __te_impl(string_view __enc) noexcept
       : __encoding_rep_(__find_encoding_data(__enc)) {
-    __enc.copy(__name_, max_name_length, 0);
+    __enc.copy(__name_, __max_name_length_, 0);
   }
 
-  _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(id __i) noexcept : __encoding_rep_(__find_encoding_data_by_id(__i)) {
+  _LIBCPP_HIDE_FROM_ABI constexpr __te_impl(__id __i) noexcept : __encoding_rep_(__find_encoding_data_by_id(__i)) {
     if (__encoding_rep_->__name_[0] != '\0')
       std::copy_n(__encoding_rep_->__name_, __encoding_rep_->__name_size_, __name_);
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const noexcept { return id(__encoding_rep_->__mib_rep_); }
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* name() const noexcept { return __name_; }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __id __mib() const noexcept { return __id(__encoding_rep_->__mib_rep_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* __name() const noexcept { return __name_; }
 
   // [text.encoding.aliases], class text_encoding::aliases_view
-  struct aliases_view : ranges::view_interface<aliases_view> {
+  struct __aliases_view : ranges::view_interface<__aliases_view> {
     struct __iterator {
       using iterator_concept  = random_access_iterator_tag;
       using iterator_category = random_access_iterator_tag;
@@ -481,7 +480,7 @@ public:
       _LIBCPP_HIDE_FROM_ABI constexpr auto operator<=>(__iterator __it) const { return __data_ <=> __it.__data_; }
 
     private:
-      friend struct aliases_view;
+      friend struct __aliases_view;
 
       _LIBCPP_HIDE_FROM_ABI constexpr __iterator(const __te_data* __enc_d) noexcept : __data_(__enc_d) {}
 
@@ -494,41 +493,49 @@ public:
     }
 
   private:
-    friend struct text_encoding;
+    friend struct __te_impl;
 
-    _LIBCPP_HIDE_FROM_ABI constexpr aliases_view(const __te_data* __d) : __view_data_(__d) {}
+    _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view(const __te_data* __d) : __view_data_(__d) {}
     const __te_data* __view_data_;
   };
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const { return aliases_view(__encoding_rep_); }
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view __aliases() const { return __aliases_view(__encoding_rep_); }
 
-  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __a, const text_encoding& __b) noexcept {
-    return __a.mib() == id::other && __b.mib() == id::other
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const __te_impl& __a, const __te_impl& __b) noexcept {
+    return __a.__mib() == __id::other && __b.__mib() == __id::other
              ? __comp_name(__a.__name_, __b.__name_)
-             : __a.mib() == __b.mib();
+             : __a.__mib() == __b.__mib();
   }
 
-  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __encoding, const id __i) noexcept {
-    return __encoding.mib() == __i;
+  _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const __te_impl& __encoding, const __id __i) noexcept {
+    return __encoding.__mib() == __i;
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding literal() noexcept {
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval __te_impl __literal() noexcept {
     // TODO: Remove this branch once we have __GNUC_EXECUTION_CHARSET_NAME or __clang_literal_encoding__ unconditionally
 #  ifdef __GNUC_EXECUTION_CHARSET_NAME
-    return text_encoding(__GNUC_EXECUTION_CHARSET_NAME);
+    return __te_impl(__GNUC_EXECUTION_CHARSET_NAME);
 #  elif defined(__clang_literal_encoding__)
-    return text_encoding(__clang_literal_encoding__);
+    return __te_impl(__clang_literal_encoding__);
 #  else
-    return text_encoding();
+    return __te_impl();
 #  endif
   }
+  
+  static __te_impl __get_env_encoding();
+  static __te_impl __get_locale_encoding(const char* __name);
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() = delete("Unimplemented");
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is()       = delete("Unimplemented");
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static __te_impl __environment() {
+    return __get_env_encoding();
+  }
 
-private:
+  template<__id _Id>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
+    return __environment() == _Id;
+  }
+
   const __te_data* __encoding_rep_  = __text_encoding_data + 1;
-  char __name_[max_name_length + 1] = {0};
+  char __name_[__max_name_length_ + 1] = {0};
 
   _LIBCPP_HIDE_FROM_ABI static constexpr __te_data __text_encoding_data[] = {
       {"", 1, 0, 0}, // other
@@ -1417,20 +1424,10 @@ private:
       {"csCP50220", 2260, 9, 1}};
 };
 
-template <>
-struct hash<text_encoding> {
-  size_t operator()(const text_encoding& __enc) const noexcept {
-    return std::hash<std::text_encoding::id>()(__enc.mib());
-  }
-};
-
-template <>
-inline constexpr bool ranges::enable_borrowed_range<text_encoding::aliases_view> = true;
-
 _LIBCPP_END_NAMESPACE_STD
 
-#endif // _LIBCPP_STD_VER >= 26
+#endif // _LIBCPP_STD_VER >= 23
 
 _LIBCPP_POP_MACROS
 
-#endif // _LIBCPP___TEXT_ENCODING_TEXT_ENCODING_H
+#endif // _LIBCPP__TEXT_ENCODING_TE_IMPL_H

@@ -2091,7 +2091,7 @@ module std [system] {
   }
 
   module text_encoding {
-    module text_encoding { header "__text_encoding/text_encoding.h" }
+    module text_encoding { header "__text_encoding/te_impl.h" }
 
     header "text_encoding"
     export *

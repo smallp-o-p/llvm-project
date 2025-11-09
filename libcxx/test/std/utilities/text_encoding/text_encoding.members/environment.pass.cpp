@@ -17,13 +17,10 @@
 
 // text_encoding text_encoding::environment();
 
-// As of libc++ 22, text_encoding::environment() is unimplemented.
-
 #include "test_text_encoding.h"
 
 using id = std::text_encoding::id;
 int main(int, char**) {
-#if false 
   auto env_te = std::text_encoding::environment();
   // 1. Depending on the environment text_encoding mib, verify that environment_is returns true for that mib.
   {
@@ -68,6 +65,5 @@ int main(int, char**) {
   }
 #  endif
 
-#endif
   return 0;
 }
