@@ -15,9 +15,7 @@
 #include <__algorithm/lower_bound.h>
 #include <__config>
 #include <__cstddef/ptrdiff_t.h>
-#include <__functional/hash.h>
 #include <__iterator/iterator_traits.h>
-#include <__ranges/enable_borrowed_range.h>
 #include <__ranges/view_interface.h>
 #include <cstdint>
 #include <string_view>
