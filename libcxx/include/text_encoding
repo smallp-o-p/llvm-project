@@ -105,7 +105,7 @@ public:
     return text_encoding(__te_impl::__literal());
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding __environment() {
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
     return text_encoding(__te_impl::__environment());
   };
 
