@@ -524,19 +524,47 @@ private:
 #  endif
   }
 
-#  if _LIBCPP_HAS_LOCALIZATION && !defined(__ANDROID__)
-  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
-#  if defined(_LIBCPP_WIN32API)
+#  if _LIBCPP_HAS_LOCALIZATION
+  // TODO: Android has <langinfo.h> but not nl_langinfo_l which is required to implement this function.
+#    if !defined(__ANDROID__)
+#      if defined(_LIBCPP_WIN32API)
   _LIBCPP_HIDDEN static __id __get_win32_acp();
-#  endif
+#      endif
+  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name);
   _LIBCPP_HIDDEN static __te_impl __get_env_encoding();
+
   [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
   template <__id _Id>
   [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
     return __environment() == _Id;
   }
+
+#    else
+  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name) = delete;
+  _LIBCPP_HIDDEN static __te_impl __get_env_encoding()                      = delete;
+
+  [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
+
+  template <__id _Id>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
+    return false;
+  }
+#    endif
+
+#  else
+
+#    if defined(_LIBCPP_WIN32API)
+  _LIBCPP_HIDDEN static __id __get_win32_acp() = delete;
+#    endif
+  _LIBCPP_HIDDEN static __te_impl __get_locale_encoding(const char* __name) = delete;
+  _LIBCPP_HIDDEN static __te_impl __get_env_encoding()                      = delete;
+  [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment()  = delete;
+  template <__id _Id>
+  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() = delete;
+
 #  endif
+
   const __te_data* __encoding_rep_     = __text_encoding_data + 1;
   char __name_[__max_name_length_ + 1] = {0};
 

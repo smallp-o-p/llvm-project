@@ -210,6 +210,7 @@ _LIBCPP_HIDDEN __te_impl::__id __te_impl::__get_win32_acp() {
 }
 #endif // _LIBCPP_WIN32API
 
+#if !defined(__ANDROID__)
 _LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name) {
   __te_impl __e;
 
@@ -237,13 +238,17 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name) {
 }
 
 _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
-#if defined(_LIBCPP_WIN32API)
+#  if defined(_LIBCPP_WIN32API)
   return __te_impl(__get_win32_acp());
-#else
+#  else
   return __get_locale_encoding("");
-#endif // _LIBCPP_WIN32API
+#  endif // _LIBCPP_WIN32API
 }
 
 __te_impl __te_impl::__environment() { return __te_impl::__get_env_encoding(); }
 
+#else
+// TODO: Android stub which will always return unknown, should be inaccessible from the main text_encoding interface.
+__te_impl __te_impl::__environment() { return __te_impl(); }
+#endif
 _LIBCPP_END_NAMESPACE_STD
