@@ -14,7 +14,7 @@
 
 // text_encoding::text_encoding() noexcept
 
-#include "test_text_encoding.h"
+#include <text_encoding>
 
 int main(int, char**) {
   // 1. Default constructor must be nothrow

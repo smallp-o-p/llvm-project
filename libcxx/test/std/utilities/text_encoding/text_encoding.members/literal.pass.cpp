@@ -18,7 +18,7 @@
 // Concerns:
 // 1. text_encoding::literal() returns the proper encoding depending on the compiler, else unknown.
 
-#include "test_text_encoding.h"
+#include <text_encoding>
 
 int main(int, char**) {
   auto te = std::text_encoding::literal();

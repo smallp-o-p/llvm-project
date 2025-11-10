@@ -15,7 +15,7 @@
 
 // text_encoding::text_encoding(string_view) noexcept
 
-#include "test_text_encoding.h"
+#include "../test_text_encoding.h"
 
 constexpr bool test_ctor(std::string_view str, std::string_view expect, std::text_encoding::id expect_id) {
   auto te      = std::text_encoding(str);

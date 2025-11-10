@@ -14,7 +14,6 @@
 
 // Concerns:
 
-#include "test_text_encoding.h"
 #include <text_encoding>
 
 int main(int, char**) {

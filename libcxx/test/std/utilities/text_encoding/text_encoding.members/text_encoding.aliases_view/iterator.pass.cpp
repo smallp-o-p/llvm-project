@@ -13,6 +13,7 @@
 // struct text_encoding::aliases_view
 
 #include "test_text_encoding.h"
+#include <text_encoding>
 
 constexpr bool iter_test() {
   constexpr int num_ascii_aliases = 11;
