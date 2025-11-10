@@ -15,10 +15,9 @@
 // UNSUPPORTED: android
 // UNSUPPORTED: windows
 
-#include <text_encoding> 
+#include <text_encoding>
 
 int main(int, char**) {
-
   // text_encoding::environment() is affected by changes to the "LANG" environment variable on POSIX systems.
   {
     setenv("LANG", LOCALE_fr_CA_ISO8859_1, 1);
@@ -32,5 +31,4 @@ int main(int, char**) {
 
     assert(std::text_encoding::environment_is<std::text_encoding::id::ISOLatin1>());
   }
-
 }
