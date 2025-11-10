@@ -18,6 +18,7 @@
 // Concerns:
 // 1. text_encoding::literal() returns the proper encoding depending on the compiler, else unknown.
 
+#include <cassert>
 #include <text_encoding>
 
 int main(int, char**) {

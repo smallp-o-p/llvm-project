@@ -15,6 +15,8 @@
 
 // text_encoding::text_encoding(string_view) noexcept
 
+#include <cassert>
+
 #include "../test_text_encoding.h"
 
 constexpr bool test_ctor(std::string_view str, std::string_view expect, std::text_encoding::id expect_id) {

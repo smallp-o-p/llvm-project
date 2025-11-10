@@ -14,9 +14,10 @@
 
 // text_encoding operator==(const text_encoding&, const text_encoding&) _NOEXCEPT
 
-// Concerns:
-
+#include <cassert>
 #include <text_encoding>
+
+#include "test_macros.h"
 
 using id = std::text_encoding::id;
 

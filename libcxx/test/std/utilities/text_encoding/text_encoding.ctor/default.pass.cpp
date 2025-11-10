@@ -14,6 +14,7 @@
 
 // text_encoding::text_encoding() noexcept
 
+#include <cassert>
 #include <text_encoding>
 
 int main(int, char**) {

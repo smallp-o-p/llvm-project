@@ -18,8 +18,12 @@
 
 // text_encoding text_encoding::environment();
 
-#include "../test_text_encoding.h"
+#include <cassert>
+#include <clocale>
 #include <text_encoding>
+
+#include "../test_text_encoding.h"
+#include "platform_support.h"
 
 using id = std::text_encoding::id;
 int main(int, char**) {

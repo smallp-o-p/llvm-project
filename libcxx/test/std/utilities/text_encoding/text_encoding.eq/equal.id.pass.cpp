@@ -14,7 +14,7 @@
 
 // text_encoding operator==(const text_encoding&, id) _NOEXCEPT
 
-// Concerns:
+#include <cassert>
 
 #include "../test_text_encoding.h"
 

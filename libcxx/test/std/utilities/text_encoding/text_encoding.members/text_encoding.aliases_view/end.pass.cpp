@@ -12,8 +12,7 @@
 
 // struct text_encoding::aliases_view
 
-// Concerns:
-
+#include <cassert>
 #include <text_encoding>
 
 int main(int, char**) {
