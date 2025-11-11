@@ -13,6 +13,7 @@
 // struct text_encoding::aliases_view
 
 #include <cassert>
+#include <ranges>
 #include <text_encoding>
 
 using id = std::text_encoding::id;

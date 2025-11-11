@@ -18,6 +18,7 @@
 // 1. Verify that text_encoding::aliases_view satisfies ranges::forward_range, copyable, view,
 //    ranges::random_access_range and ranges::borrowed_range
 
+#include <concepts>
 #include <text_encoding>
 
 static_assert(std::copyable<std::text_encoding::aliases_view>);

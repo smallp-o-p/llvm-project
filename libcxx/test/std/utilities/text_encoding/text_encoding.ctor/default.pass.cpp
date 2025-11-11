@@ -16,6 +16,7 @@
 
 #include <cassert>
 #include <text_encoding>
+#include <type_traits>
 
 int main(int, char**) {
   // 1. Default constructor must be nothrow
