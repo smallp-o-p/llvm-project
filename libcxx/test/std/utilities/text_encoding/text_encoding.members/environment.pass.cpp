@@ -28,22 +28,16 @@
 using id = std::text_encoding::id;
 int main(int, char**) {
   auto env_te = std::text_encoding::environment();
-  // 1. Depending on the environment text_encoding mib, verify that environment_is returns true for that mib.
+  // 1. Depending on the platform's default, verify that environment() returns the corresponding text encoding.
   {
     auto mib = env_te.mib();
-
-    if (mib == std::text_encoding::ASCII) {
-      assert(std::text_encoding::environment_is<std::text_encoding::ASCII>());
-    }
-    if (mib == std::text_encoding::UTF8) {
-      assert(std::text_encoding::environment_is<std::text_encoding::UTF8>());
-    }
-    if (mib == std::text_encoding::ISOLatin1) {
-      assert(std::text_encoding::environment_is<std::text_encoding::ISOLatin1>());
-    }
-    if (mib == std::text_encoding::windows1252) {
-      assert(std::text_encoding::environment_is<std::text_encoding::windows1252>());
-    }
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+    assert(mib == std::text_encoding::ASCII);
+    assert(std::text_encoding::environment_is<std::text_encoding::ASCII>());
+#elif defined(WIN32)
+    assert(mib == std::text_encoding::windows1252);
+    assert(std::text_encoding::environment_is<std::text_encoding::windows1252>());
+#endif
   }
 
   // 2. text_encoding::environment() still returns the default locale encoding when the locale is set to "en_US.UTF-8".
@@ -51,8 +45,8 @@ int main(int, char**) {
     std::setlocale(LC_ALL, LOCALE_en_US_UTF_8);
 
     auto env_te2 = std::text_encoding::environment();
-
-    assert(checkTextEncoding(env_te, env_te2));
+    assert(env_te2 != std::text_encoding::UTF8);
+    assert(env_te == env_te2);
   }
 
   return 0;
