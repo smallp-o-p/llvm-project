@@ -9,7 +9,8 @@
 // <text_encoding>
 
 // REQUIRES: std-at-least-c++26
-// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=9000000
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=20000000
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-ops-limit): -fconstexpr-ops-limit=80000000
 
 // class text_encoding
 
@@ -31,18 +32,14 @@ constexpr bool test_ctor(std::string_view str, std::string_view expect, std::tex
 
 constexpr bool test_primary_encoding_spellings() {
   for (auto& pair : unique_encoding_data) {
-    if (!test_ctor(pair.name, pair.name, std::text_encoding::id{pair.mib})) {
-      return false;
-    }
+    assert(test_ctor(pair.name, pair.name, std::text_encoding::id{pair.mib}));
   }
   return true;
 }
 
 constexpr bool test_others() {
-  for (auto& pair : other_names) {
-    if (!test_ctor(pair, pair, std::text_encoding::other)) {
-      return false;
-    }
+  for (auto& name : other_names) {
+    assert(test_ctor(name, name, std::text_encoding::other));
   }
   return true;
 }
@@ -55,6 +52,7 @@ int main(int, char**) {
 
   // happy paths
   {
+    static_assert(test_primary_encoding_spellings());
     assert(test_primary_encoding_spellings());
   }
 

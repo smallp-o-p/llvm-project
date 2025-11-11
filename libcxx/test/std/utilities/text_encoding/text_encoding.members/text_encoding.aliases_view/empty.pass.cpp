@@ -20,24 +20,21 @@
 
 using id = std::text_encoding::id;
 
-constexpr bool test_other() {
-  auto te1         = std::text_encoding(id::other);
-  auto empty_range = te1.aliases();
-  assert(std::ranges::empty(empty_range) && empty_range.empty() && !bool(empty_range));
+constexpr bool test_other_unknown() {
+  auto te_other    = std::text_encoding(id::other);
+  auto other_range = te_other.aliases();
 
-  for (auto& other_name : other_names) {
-    auto te_other          = std::text_encoding(other_name);
-    auto empty_range_other = te_other.aliases();
-    assert(std::ranges::empty(empty_range_other) && empty_range_other.empty() && !bool(empty_range_other));
-  }
+  assert(std::ranges::empty(other_range));
+  assert(other_range.empty());
+  assert(!bool(other_range));
+
+  auto te_unknown    = std::text_encoding(id::unknown);
+  auto unknown_range = te_unknown.aliases();
+  assert(std::ranges::empty(unknown_range));
+  assert(unknown_range.empty());
+  assert(!bool(unknown_range));
 
   return true;
-}
-
-constexpr bool test_unknown() {
-  auto te          = std::text_encoding(id::unknown);
-  auto empty_range = te.aliases();
-  return std::ranges::empty(empty_range) && empty_range.empty() && !bool(empty_range);
 }
 
 constexpr bool test_primary_encodings() {
@@ -55,17 +52,11 @@ constexpr bool test_primary_encodings() {
 int main(int, char**) {
   // 1. An alias_view of a text_encoding object for "other" is empty
   {
-    static_assert(test_other());
-    assert(test_other());
+    static_assert(test_other_unknown());
+    assert(test_other_unknown());
   }
 
-  // 2. An alias_view of a text_encoding object for "unknown" is empty
-  {
-    static_assert(test_unknown());
-    assert(test_unknown());
-  }
-
-  // 3. An alias_view of a text_encoding object for a known encoding e.g. "UTF-8" is not empty
+  // 2. An alias_view of a text_encoding object for a known encoding e.g. "UTF-8" is not empty
   {
     static_assert(test_primary_encodings());
     assert(test_primary_encodings());

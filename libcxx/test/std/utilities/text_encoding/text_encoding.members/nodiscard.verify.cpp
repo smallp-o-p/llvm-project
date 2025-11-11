@@ -27,7 +27,6 @@ int main(int, char**) {
   te.name();
   // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
   te.aliases();
-  // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
 
   // Clang does not emit a nodiscard warning for consteval functions with [[nodiscard]]: See issue #141536
   // expected-warning@+1 {{expression result unused}}
