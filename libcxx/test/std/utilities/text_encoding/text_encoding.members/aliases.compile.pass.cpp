@@ -20,7 +20,6 @@
 
 #include <text_encoding>
 
-static_assert(std::ranges::forward_range<std::text_encoding::aliases_view>);
 static_assert(std::copyable<std::text_encoding::aliases_view>);
 static_assert(std::ranges::view<std::text_encoding::aliases_view>);
 static_assert(std::ranges::random_access_range<std::text_encoding::aliases_view>);
