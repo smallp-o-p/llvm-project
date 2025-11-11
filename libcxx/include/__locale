@@ -97,7 +97,6 @@ public:
 
   // locale operations:
   string name() const;
-
   bool operator==(const locale&) const;
 #  if _LIBCPP_STD_VER <= 17
   _LIBCPP_HIDE_FROM_ABI bool operator!=(const locale& __y) const { return !(*this == __y); }
