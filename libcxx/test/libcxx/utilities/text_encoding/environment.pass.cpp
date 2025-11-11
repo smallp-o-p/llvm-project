@@ -15,6 +15,7 @@
 // UNSUPPORTED: android
 // UNSUPPORTED: windows
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <text_encoding>
@@ -22,16 +23,15 @@
 #include "platform_support.h" // locale name macros
 
 int main(int, char**) {
-  // text_encoding::environment() is affected by changes to the "LANG" environment variable on POSIX systems.
+  // text_encoding::environment() is (unfortunately) affected by changes to the "LANG" environment variable on POSIX systems.
   {
     setenv("LANG", LOCALE_fr_CA_ISO8859_1, 1);
 
     auto te = std::text_encoding::environment();
 
+    assert(std::text_encoding::environment_is<std::text_encoding::id::ISOLatin1>());
     assert(te == std::text_encoding::environment());
     assert(te.mib() == std::text_encoding::id::ISOLatin1);
-    assert(std::string_view(te.name()) == "ISO_8859-1:1987");
-
-    assert(std::text_encoding::environment_is<std::text_encoding::id::ISOLatin1>());
+    assert(std::ranges::contains(te.aliases(), std::string_view("ISO_8859-1")));
   }
 }
