@@ -9,29 +9,13 @@
 #ifndef SUPPORT_TEST_TEXT_ENCODING_H
 #define SUPPORT_TEST_TEXT_ENCODING_H
 
-#include <algorithm>
-#include <cassert>
-#include <clocale>
-#include <concepts>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <print>
-#include <ranges>
-#include <string_view>
-#include <text_encoding>
-#include <type_traits>
-
-#include "platform_support.h"
-#include "test_macros.h"
-
 struct encoding_data {
   const char* name;
   int mib;
   int size;
 };
 
-constexpr const encoding_data unique_encoding_data[]{
+constexpr encoding_data unique_encoding_data[]{
     {"US-ASCII", 3, 8},
     {"ISO_8859-1:1987", 4, 15},
     {"ISO_8859-2:1987", 5, 15},

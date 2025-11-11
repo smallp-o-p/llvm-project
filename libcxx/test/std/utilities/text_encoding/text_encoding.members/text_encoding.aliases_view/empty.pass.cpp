@@ -14,6 +14,7 @@
 // struct text_encoding::aliases_view
 
 #include <cassert>
+#include <ranges>
 #include <text_encoding>
 
 #include "../../test_text_encoding.h"

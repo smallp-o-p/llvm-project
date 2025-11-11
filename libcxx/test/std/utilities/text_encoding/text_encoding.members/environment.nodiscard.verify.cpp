@@ -10,10 +10,9 @@
 
 // REQUIRES: std-at-least-c++26
 // UNSUPPORTED: no-localization
+// UNSUPPORTED: android
 
 // class text_encoding
-// UNSUPPORTED: no-localization
-// UNSUPPORTED: android
 
 // Concerns:
 // 1. Verify that text_encoding member functions are nodiscard

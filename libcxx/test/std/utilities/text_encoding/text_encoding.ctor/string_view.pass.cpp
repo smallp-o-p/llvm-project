@@ -10,13 +10,15 @@
 
 // REQUIRES: std-at-least-c++26
 // ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=20000000
-// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-ops-limit): -fconstexpr-ops-limit=80000000
-
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-ops-limit): -fconstexpr-ops-limit=90000000
 // class text_encoding
 
 // text_encoding::text_encoding(string_view) noexcept
 
 #include <cassert>
+#include <string_view>
+#include <text_encoding>
+#include <type_traits>
 
 #include "../test_text_encoding.h"
 
@@ -25,21 +27,27 @@ constexpr bool test_ctor(std::string_view str, std::string_view expect, std::tex
   bool success = true;
 
   assert(te.mib() == expect_id);
-  assert(expect.compare(te.name()) == 0);
+  assert(te.name() == expect);
 
   return success;
 }
 
 constexpr bool test_primary_encoding_spellings() {
-  for (auto& pair : unique_encoding_data) {
-    assert(test_ctor(pair.name, pair.name, std::text_encoding::id{pair.mib}));
+  for (auto& data : unique_encoding_data) {
+    auto te = std::text_encoding(std::string_view(data.name));
+
+    assert(te.mib() == std::text_encoding::id(data.mib));
+    assert(te.name() == std::string_view(data.name));
   }
   return true;
 }
 
 constexpr bool test_others() {
   for (auto& name : other_names) {
-    assert(test_ctor(name, name, std::text_encoding::other));
+    auto te = std::text_encoding(std::string_view(name));
+
+    assert(te.mib() == std::text_encoding::other);
+    assert(te.name() == std::string_view(name));
   }
   return true;
 }

@@ -14,13 +14,11 @@
 
 // text_encoding::text_encoding(id) noexcept
 
-// Concerns:
-// 1. text_encoding(id) must be nothrow
-// 2. Constructing an object with a valid id must set mib() and the name to the corresponding value.
-// 3. Constructing an object using id::unknown must set mib() to id::unknown and the name to an empty string.
-// 4. Constructing an object using id::other must set mib() to id::other and the name to an empty string.
-
+#include <algorithm>
 #include <cassert>
+#include <ranges>
+#include <text_encoding>
+#include <type_traits>
 
 #include "../test_text_encoding.h"
 
@@ -79,21 +77,25 @@ constexpr bool test_other() {
 
 int main(int, char**) {
   {
+    // 1. text_encoding(id) must be nothrow
     static_assert(std::is_nothrow_constructible<std::text_encoding, std::text_encoding::id>::value,
                   "Must be nothrow constructible with id");
   }
 
   {
+    // 2. Constructing an object with a valid id must set mib() and the name to the corresponding value.
     static_assert(id_ctors());
     assert(id_ctors());
   }
 
   {
+    // 3. Constructing an object using id::unknown must set mib() to id::unknown and the name to an empty string.
     static_assert(test_unknown());
     assert(test_unknown());
   }
 
   {
+    // 4. Constructing an object using id::other must set mib() to id::other and the name to an empty string.
     static_assert(test_other());
     assert(test_other());
   }
