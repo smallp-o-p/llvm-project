@@ -248,7 +248,10 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
 __te_impl __te_impl::__environment() { return __te_impl::__get_env_encoding(); }
 
 #else
-// TODO: Android stub which will always return unknown, should be inaccessible from the main text_encoding interface.
+
+// TODO: Stubs for Android that shouldn't be accessible from any public interface.
+_LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name [[maybe_unused]]) { return __te_impl(); }
+_LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() { return __te_impl(); }
 __te_impl __te_impl::__environment() { return __te_impl(); }
 #endif
 _LIBCPP_END_NAMESPACE_STD
