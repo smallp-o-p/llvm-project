@@ -244,9 +244,9 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name [[m
 _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
 #if defined(_LIBCPP_WIN32API)
   return __te_impl(__get_win32_acp());
-#  else
+#else
   return __get_locale_encoding("");
-#  endif // _LIBCPP_WIN32API
+#endif // _LIBCPP_WIN32API
 }
 
 __te_impl __te_impl::__environment() { return __te_impl::__get_env_encoding(); }
