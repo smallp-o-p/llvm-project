@@ -10,7 +10,7 @@
 
 // REQUIRES: std-at-least-c++26
 // ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=30000000
-// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-ops-limit): -fconstexpr-ops-limit=90000000
+// ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-ops-limit): -fconstexpr-ops-limit=99000000
 // class text_encoding
 
 // text_encoding::text_encoding(string_view) noexcept
