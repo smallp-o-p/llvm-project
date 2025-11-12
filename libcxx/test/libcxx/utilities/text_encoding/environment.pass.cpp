@@ -14,6 +14,7 @@
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: android
 // UNSUPPORTED: windows
+// UNSUPPORTED: availability-te-environment-missing
 
 #include <algorithm>
 #include <cassert>

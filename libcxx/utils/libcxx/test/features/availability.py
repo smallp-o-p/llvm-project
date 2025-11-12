@@ -196,4 +196,11 @@ features += [
             cfg.available_features,
         ),
     ),
+    Feature(
+      name="availability-te-environment-missing",
+        when=lambda cfg: BooleanExpression.evaluate(
+            "!libcpp-has-no-availability-markup && (stdlib=apple-libc++ && !_target-has-llvm-22)",
+            cfg.available_features,
+        ),
+    )
 ]

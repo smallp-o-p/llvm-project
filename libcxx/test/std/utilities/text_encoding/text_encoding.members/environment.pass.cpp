@@ -13,6 +13,7 @@
 
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: android
+// UNSUPPORTED: availability-te-environment-missing
 
 // class text_encoding
 
