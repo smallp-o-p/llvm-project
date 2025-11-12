@@ -14,6 +14,7 @@
 
 #include <cassert>
 #include <ranges>
+#include <string_view>
 #include <text_encoding>
 
 using id = std::text_encoding::id;
@@ -26,7 +27,7 @@ constexpr bool tests() {
     auto view1 = te.aliases();
     auto view2 = te.aliases();
 
-    assert(view1.front() == view2.front());
+    assert(std::string_view(view1.front()) == std::string_view(view2.front()));
   }
 
   // 2. An aliases_views of two text_encoding objects that represent the same ID but hold different names return the same front()
@@ -37,7 +38,7 @@ constexpr bool tests() {
     auto view1 = te1.aliases();
     auto view2 = te2.aliases();
 
-    assert(view1.front() == view2.front());
+    assert(std::string_view(view1.front()) == std::string_view(view2.front()));
   }
 
   // 3. An aliases_views of two text_encoding objects that represent different IDs return different front()
@@ -48,7 +49,7 @@ constexpr bool tests() {
     auto view1 = te1.aliases();
     auto view2 = te2.aliases();
 
-    assert(!(view1.front() == view2.front()));
+    assert(!(std::string_view(view1.front()) == std::string_view(view2.front())));
   }
 
   return true;
