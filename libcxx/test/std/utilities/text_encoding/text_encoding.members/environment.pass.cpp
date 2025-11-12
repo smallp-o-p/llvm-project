@@ -27,7 +27,7 @@
 
 using id = std::text_encoding::id;
 int main(int, char**) {
-  auto env_te = std::text_encoding::environment();
+  auto te = std::text_encoding::environment();
   // 1. Depending on the platform's default, verify that environment() returns the corresponding text encoding.
   {
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
