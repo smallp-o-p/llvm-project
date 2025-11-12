@@ -43,9 +43,9 @@ int main(int, char**) {
   {
     std::setlocale(LC_ALL, LOCALE_en_US_UTF_8);
 
-    auto env_te2 = std::text_encoding::environment();
-    assert(env_te2 != std::text_encoding::UTF8);
-    assert(env_te == env_te2);
+    auto te2 = std::text_encoding::environment();
+    assert(te2 != std::text_encoding::UTF8);
+    assert(te == te2);
   }
 
   return 0;
