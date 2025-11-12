@@ -10,7 +10,7 @@
 #include <__text_encoding/te_impl.h>
 
 #if defined(_LIBCPP_WIN32API)
-#  include <winnls.h>
+#  include <windows.h>
 #else
 #  include <__locale_dir/locale_base_api.h>
 #endif
@@ -210,7 +210,7 @@ _LIBCPP_HIDDEN __te_impl::__id __te_impl::__get_win32_acp() {
 }
 #endif // _LIBCPP_WIN32API
 
-#if !defined(__ANDROID__)
+#if !defined(__ANDROID__) && !defined(_LIBCPP_WIN32API)
 _LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name) {
   __te_impl __e;
 
@@ -237,8 +237,12 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name) {
   return __e;
 }
 
+#else
+_LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name [[maybe_unused]]) { return __te_impl(); }
+#endif
+
 _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
-#  if defined(_LIBCPP_WIN32API)
+#if defined(_LIBCPP_WIN32API)
   return __te_impl(__get_win32_acp());
 #  else
   return __get_locale_encoding("");
@@ -247,11 +251,4 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
 
 __te_impl __te_impl::__environment() { return __te_impl::__get_env_encoding(); }
 
-#else
-
-// TODO: Stubs for Android that shouldn't be accessible from any public interface.
-_LIBCPP_HIDDEN __te_impl __te_impl::__get_locale_encoding(const char* __name [[maybe_unused]]) { return __te_impl(); }
-_LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() { return __te_impl(); }
-__te_impl __te_impl::__environment() { return __te_impl(); }
-#endif
 _LIBCPP_END_NAMESPACE_STD
