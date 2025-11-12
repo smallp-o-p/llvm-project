@@ -25,15 +25,13 @@ using id = std::text_encoding::id;
 constexpr bool test_primary_encodings() {
   for (auto& data : unique_encoding_data) {
     auto te = std::text_encoding(id(data.mib));
-    if (te != id(data.mib)) {
-      return false;
-    }
+    assert(te == id(data.mib));
   }
 
   return true;
 }
 
-int main(int, char**) {
+constexpr bool tests() {
   // 1. operator==(const text_encoding&, id) must be noexcept
   {
     auto te = std::text_encoding();
@@ -42,44 +40,40 @@ int main(int, char**) {
 
   // 2. operator==(const text_encoding&, id) returns true if mib() is equal to the id
   {
-    auto te = std::text_encoding(id::UTF8);
-    assert(te == id::UTF8);
-  }
-
-  // 2.0.1
-  {
-    constexpr auto te = std::text_encoding();
-    static_assert(te == id::unknown);
+    assert(std::text_encoding(id::UTF8) == id::UTF8);
   }
 
   // 2.1
   {
-    auto te = std::text_encoding(id::other);
-    assert(te == id::other);
+    assert(std::text_encoding() == id::unknown);
   }
 
   // 2.1.1
   {
-    constexpr auto te = std::text_encoding(id::other);
-    static_assert(te == id::other);
+    assert(std::text_encoding(id::unknown) == id::unknown);
+  }
+
+  // 2.2
+  {
+    assert(std::text_encoding(id::other) == id::other);
   }
 
   // 3. operator==(const text_encoding&, id) returns false if mib() is not equal to the id
   {
-    auto te = std::text_encoding(id::UTF8);
-    assert(!(te == id::UTF16));
-  }
-
-  // 3
-  {
-    constexpr auto te = std::text_encoding(id::UTF8);
-    static_assert(!(te == id::UTF16));
+    assert(!(std::text_encoding(id::UTF8) == id::UTF16));
   }
 
   {
-    static_assert(test_primary_encodings());
     assert(test_primary_encodings());
   }
 
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(tests());
+    assert(tests());
+  }
   return 0;
 }

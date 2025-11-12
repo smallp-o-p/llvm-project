@@ -18,6 +18,14 @@
 #include <text_encoding>
 #include <type_traits>
 
+constexpr bool test() {
+  constexpr auto te = std::text_encoding();
+  assert(te.mib() == std::text_encoding::id::unknown);
+  assert(std::string_view("") == te.name());
+
+  return true;
+}
+
 int main(int, char**) {
   // 1. Default constructor must be nothrow
   {
@@ -27,11 +35,8 @@ int main(int, char**) {
 
   // 2. Default constructing a text_encoding object makes it so that mib() == id::unknown, and its name is empty
   {
-    constexpr auto te = std::text_encoding();
-    static_assert(te.mib() == std::text_encoding::id::unknown);
-    static_assert(std::string_view("").compare(te.name()) == 0);
-    assert(te.mib() == std::text_encoding::id::unknown);
-    assert(std::string_view("").compare(te.name()) == 0);
+    static_assert(test());
+    assert(test());
   }
 
   return 0;

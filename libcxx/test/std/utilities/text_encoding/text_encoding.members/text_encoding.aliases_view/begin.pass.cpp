@@ -18,8 +18,8 @@
 
 using id = std::text_encoding::id;
 
-int main(int, char**) {
-  // 1. begin() of an aliases_view() from a single text_encoding object are the same.
+constexpr bool tests() {
+  // 1. begin() of an aliases_view from a single text_encoding object are the same.
   {
     auto te    = std::text_encoding(id::UTF8);
     auto view1 = te.aliases();
@@ -53,5 +53,13 @@ int main(int, char**) {
     assert(!(std::ranges::begin(view1) == std::ranges::begin(view2)));
   }
 
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(tests());
+    assert(tests());
+  }
   return 0;
 }

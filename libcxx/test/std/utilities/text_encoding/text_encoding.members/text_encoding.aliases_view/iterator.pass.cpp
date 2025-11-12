@@ -19,6 +19,7 @@
 #include <utility>
 
 constexpr bool tests() {
+  // Test iterator operators.
   auto te = std::text_encoding(std::text_encoding::ASCII); // 11 aliases
   auto i = te.aliases().begin(), j = te.aliases().begin(), k = te.aliases().end();
   static_assert(std::three_way_comparable<decltype(i), std::strong_ordering>);
@@ -90,7 +91,11 @@ constexpr bool tests() {
   return true;
 }
 
-int main() {
-  static_assert(tests());
-  assert(tests());
+int main(int, char**) {
+  {
+    static_assert(tests());
+    assert(tests());
+  }
+
+  return 0;
 }

@@ -18,7 +18,7 @@
 
 using id = std::text_encoding::id;
 
-int main(int, char**) {
+constexpr bool tests() {
   // 1. An aliases_view from a single text_encoding object returns the same front()
   {
     auto te = std::text_encoding(id::UTF8);
@@ -51,5 +51,13 @@ int main(int, char**) {
     assert(!(view1.front() == view2.front()));
   }
 
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(tests());
+    assert(tests());
+  }
   return 0;
 }

@@ -34,21 +34,58 @@ constexpr bool test_ctor(std::string_view str, std::string_view expect, std::tex
 
 constexpr bool test_primary_encoding_spellings() {
   for (auto& data : unique_encoding_data) {
-    auto te = std::text_encoding(std::string_view(data.name));
+    auto te = std::text_encoding(data.name);
 
     assert(te.mib() == std::text_encoding::id(data.mib));
-    assert(te.name() == std::string_view(data.name));
+    assert(te.name() == data.name);
   }
   return true;
 }
 
 constexpr bool test_others() {
   for (auto& name : other_names) {
-    auto te = std::text_encoding(std::string_view(name));
+    auto te = std::text_encoding(name);
 
     assert(te.mib() == std::text_encoding::other);
-    assert(te.name() == std::string_view(name));
+    assert(te.name() == name);
   }
+  return true;
+}
+
+constexpr bool tests() {
+  // happy paths
+  {
+    assert(test_primary_encoding_spellings());
+  }
+
+  {
+    assert(test_ctor("U_T_F-8", "U_T_F-8", std::text_encoding::UTF8));
+  }
+
+  {
+    assert(test_ctor("utf8", "utf8", std::text_encoding::UTF8));
+  }
+
+  {
+    assert(test_ctor("u.t.f-008", "u.t.f-008", std::text_encoding::UTF8));
+  }
+
+  {
+    assert(test_ctor("utf-80", "utf-80", std::text_encoding::other));
+  }
+
+  {
+    assert(test_ctor("iso885931988", "iso885931988", std::text_encoding::ISOLatin3));
+  }
+
+  {
+    assert(test_ctor("iso00885931988", "iso00885931988", std::text_encoding::ISOLatin3));
+  }
+
+  {
+    assert(test_others());
+  }
+
   return true;
 }
 
@@ -58,45 +95,9 @@ int main(int, char**) {
                   "Must be nothrow constructible with string_view");
   }
 
-  // happy paths
   {
-    static_assert(test_primary_encoding_spellings());
-    assert(test_primary_encoding_spellings());
-  }
-
-  {
-    static_assert(test_ctor("U_T_F-8", "U_T_F-8", std::text_encoding::UTF8));
-    assert(test_ctor("U_T_F-8", "U_T_F-8", std::text_encoding::UTF8));
-  }
-
-  {
-    static_assert(test_ctor("utf8", "utf8", std::text_encoding::UTF8));
-    assert(test_ctor("utf8", "utf8", std::text_encoding::UTF8));
-  }
-
-  {
-    static_assert(test_ctor("u.t.f-008", "u.t.f-008", std::text_encoding::UTF8));
-    assert(test_ctor("u.t.f-008", "u.t.f-008", std::text_encoding::UTF8));
-  }
-
-  {
-    static_assert(test_ctor("utf-80", "utf-80", std::text_encoding::other));
-    assert(test_ctor("utf-80", "utf-80", std::text_encoding::other));
-  }
-
-  {
-    static_assert(test_ctor("iso885931988", "iso885931988", std::text_encoding::ISOLatin3));
-    assert(test_ctor("iso885931988", "iso885931988", std::text_encoding::ISOLatin3));
-  }
-
-  {
-    static_assert(test_ctor("iso00885931988", "iso00885931988", std::text_encoding::ISOLatin3));
-    assert(test_ctor("iso00885931988", "iso00885931988", std::text_encoding::ISOLatin3));
-  }
-
-  {
-    static_assert(test_others());
-    assert(test_others());
+    static_assert(tests());
+    assert(tests());
   }
 
   return 0;

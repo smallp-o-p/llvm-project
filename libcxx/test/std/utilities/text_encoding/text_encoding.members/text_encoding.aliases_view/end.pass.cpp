@@ -15,12 +15,21 @@
 #include <cassert>
 #include <text_encoding>
 
-int main(int, char**) {
+constexpr bool test() {
   auto a_other       = std::text_encoding("foobar");
   auto other_aliases = a_other.aliases();
 
-  // 1. begin() of an aliases_view() of "other" is equal to end()
+  // 1. begin() of an aliases_view of "other" is equal to end()
   assert(other_aliases.begin() == other_aliases.end());
+
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(test());
+    assert(test());
+  }
 
   return 0;
 }

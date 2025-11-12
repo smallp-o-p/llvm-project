@@ -15,7 +15,8 @@
 // class text_encoding
 
 // Concerns:
-// 1. Verify that text_encoding member functions are nodiscard
+// 1. Verify that environment() and environment_is<id>() are nodiscard.
+// Split from the general [[nodiscard]] tests to accomodate no-localization builds.
 
 #include <text_encoding>
 

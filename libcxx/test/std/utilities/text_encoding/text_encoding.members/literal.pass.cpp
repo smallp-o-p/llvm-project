@@ -21,7 +21,7 @@
 #include <cassert>
 #include <text_encoding>
 
-int main(int, char**) {
+constexpr bool test() {
   auto te = std::text_encoding::literal();
 #ifdef __GNUC_EXECUTION_CHARSET_NAME
   assert(std::string_view(te.name()) == std::string_view(__GNUC_EXECUTION_CHARSET_NAME));
@@ -30,5 +30,14 @@ int main(int, char**) {
 #else
   assert(te.mib() = std::text_encoding::id::unknown);
 #endif
+
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(test());
+    assert(test());
+  }
   return 0;
 }

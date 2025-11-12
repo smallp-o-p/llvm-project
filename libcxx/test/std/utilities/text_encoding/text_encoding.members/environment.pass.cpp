@@ -34,7 +34,7 @@ int main(int, char**) {
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
     assert(mib == std::text_encoding::ASCII);
     assert(std::text_encoding::environment_is<std::text_encoding::ASCII>());
-#elif defined(WIN32)
+#elif defined(_WIN32)
     assert(mib == std::text_encoding::windows1252);
     assert(std::text_encoding::environment_is<std::text_encoding::windows1252>());
 #endif

@@ -50,18 +50,24 @@ constexpr bool test_primary_encodings() {
   return true;
 }
 
-int main(int, char**) {
-  // 1. An alias_view of a text_encoding object for "other" is empty
+constexpr bool tests() {
+  // 1. An alias_view of a text_encoding object for "other" and "unknown" are empty
   {
-    static_assert(test_other_unknown());
     assert(test_other_unknown());
   }
 
   // 2. An alias_view of a text_encoding object for a known encoding e.g. "UTF-8" is not empty
   {
-    static_assert(test_primary_encodings());
     assert(test_primary_encodings());
   }
 
+  return true;
+}
+
+int main(int, char**) {
+  {
+    static_assert(tests());
+    assert(tests());
+  }
   return 0;
 }

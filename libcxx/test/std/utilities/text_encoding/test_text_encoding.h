@@ -8,9 +8,10 @@
 
 #ifndef SUPPORT_TEST_TEXT_ENCODING_H
 #define SUPPORT_TEST_TEXT_ENCODING_H
+#include <string_view>
 
 struct encoding_data {
-  const char* name;
+  std::string_view name;
   int mib;
   int size;
 };
@@ -274,7 +275,7 @@ constexpr encoding_data unique_encoding_data[]{
     {"CP50220", 2260, 7},
 };
 
-constexpr const char* other_names[]{
+constexpr std::string_view other_names[]{
     "graah", "oops", "libcxx", "foobar", "barbaz", "1234567", "llvm-project", "utf-81", "utf-9", "CA-ASCII"};
 
 #endif // SUPPORT_TEST_TEXT_ENCODING_H
