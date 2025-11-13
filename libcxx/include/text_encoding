@@ -107,12 +107,12 @@ public:
     return text_encoding(__te_impl::__literal());
   }
 #    if _LIBCPP_HAS_LOCALIZATION && !defined(__ANDROID__)
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
+  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
     return text_encoding(__te_impl::__environment());
   };
 
   template <id _Id>
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() {
+  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool environment_is() {
     return __te_impl::__environment_is<_Id>();
   }
 #    else

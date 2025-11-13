@@ -531,14 +531,13 @@ private:
   _LIBCPP_HIDDEN static __id __get_win32_acp();
 #    endif
 
-#    if _LIBCPP_AVAILABILITY_HAS_TE_ENVIRONMENT
-  [[nodiscard]] _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
+  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
   template <__id _Id>
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
+  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
     return __environment() == _Id;
   }
-#    endif
+
 #  endif
 
   const __te_data* __encoding_rep_     = __text_encoding_data + 1;

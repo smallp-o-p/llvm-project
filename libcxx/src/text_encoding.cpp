@@ -249,6 +249,8 @@ _LIBCPP_HIDDEN __te_impl __te_impl::__get_env_encoding() {
 #endif // _LIBCPP_WIN32API
 }
 
-__te_impl __te_impl::__environment() { return __te_impl::__get_env_encoding(); }
+_LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_EXPORTED_FROM_ABI __te_impl __te_impl::__environment() {
+  return __te_impl::__get_env_encoding();
+}
 
 _LIBCPP_END_NAMESPACE_STD
