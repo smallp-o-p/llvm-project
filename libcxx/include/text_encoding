@@ -91,9 +91,9 @@ public:
   _LIBCPP_HIDE_FROM_ABI constexpr explicit text_encoding(string_view __enc) noexcept : __impl_(__enc) {}
   _LIBCPP_HIDE_FROM_ABI constexpr text_encoding(id __i) noexcept : __impl_(__i) {}
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const noexcept { return __impl_.__mib(); }
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* name() const noexcept { return __impl_.__name(); }
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const { return __impl_.__aliases(); }
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr id mib() const noexcept { return __impl_.__mib(); }
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr const char* name() const noexcept { return __impl_.__name(); }
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr aliases_view aliases() const { return __impl_.__aliases(); }
 
   _LIBCPP_HIDE_FROM_ABI friend constexpr bool operator==(const text_encoding& __a, const text_encoding& __b) noexcept {
     return __a.__impl_ == __b.__impl_;
@@ -103,23 +103,23 @@ public:
     return __enc.__impl_ == __i;
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding literal() noexcept {
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI static consteval text_encoding literal() noexcept {
     return text_encoding(__te_impl::__literal());
   }
 #    if _LIBCPP_HAS_LOCALIZATION && !defined(__ANDROID__)
-  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
+  [[__nodiscard__]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static text_encoding environment() {
     return text_encoding(__te_impl::__environment());
   };
 
   template <id _Id>
-  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool environment_is() {
+  [[__nodiscard__]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool environment_is() {
     return __te_impl::__environment_is<_Id>();
   }
 #    else
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() = delete;
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI static text_encoding environment() = delete;
 
   template <id _Id>
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() = delete;
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI static bool environment_is() = delete;
 #    endif
 };
 

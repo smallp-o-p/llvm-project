@@ -399,10 +399,10 @@ private:
       std::copy_n(__encoding_rep_->__name_, __encoding_rep_->__name_size_, __name_);
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __id __mib() const noexcept {
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr __id __mib() const noexcept {
     return __id(__encoding_rep_->__mib_rep_);
   }
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr const char* __name() const noexcept { return __name_; }
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr const char* __name() const noexcept { return __name_; }
 
   // [text.encoding.aliases], class text_encoding::aliases_view
   struct __aliases_view : ranges::view_interface<__aliases_view> {
@@ -499,7 +499,7 @@ private:
     const __te_data* __view_data_;
   };
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view __aliases() const {
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI constexpr __aliases_view __aliases() const {
     return __aliases_view(__encoding_rep_);
   }
 
@@ -513,7 +513,7 @@ private:
     return __encoding.__mib() == __i;
   }
 
-  [[nodiscard]] _LIBCPP_HIDE_FROM_ABI static consteval __te_impl __literal() noexcept {
+  [[__nodiscard__]] _LIBCPP_HIDE_FROM_ABI static consteval __te_impl __literal() noexcept {
     // TODO: Remove this branch once we have __GNUC_EXECUTION_CHARSET_NAME or __clang_literal_encoding__ unconditionally
 #  ifdef __GNUC_EXECUTION_CHARSET_NAME
     return __te_impl(__GNUC_EXECUTION_CHARSET_NAME);
@@ -531,10 +531,10 @@ private:
   _LIBCPP_HIDDEN static __id __get_win32_acp();
 #    endif
 
-  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
+  [[__nodiscard__]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_EXPORTED_FROM_ABI static __te_impl __environment();
 
   template <__id _Id>
-  [[nodiscard]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
+  [[__nodiscard__]] _LIBCPP_AVAILABILITY_TE_ENVIRONMENT _LIBCPP_HIDE_FROM_ABI static bool __environment_is() {
     return __environment() == _Id;
   }
 
