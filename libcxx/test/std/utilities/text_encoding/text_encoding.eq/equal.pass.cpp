@@ -10,7 +10,7 @@
 
 // <text_encoding>
 
-// text_encoding operator==(const text_encoding&, const text_encoding&) noexcept
+// bool text_encoding::operator==(const text_encoding&, const text_encoding&) noexcept
 
 #include <cassert>
 #include <text_encoding>

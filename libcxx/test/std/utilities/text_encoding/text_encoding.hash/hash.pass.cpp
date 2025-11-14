@@ -17,7 +17,7 @@
 #include <text_encoding>
 #include <type_traits>
 
-bool test_te_hash() {
+void test_te_hash() {
   using T = std::text_encoding;
   using H = std::hash<T>;
 
@@ -49,8 +49,6 @@ bool test_te_hash() {
     const H h{};
     assert(h(te1) == h(te2));
   }
-
-  return true;
 }
 
 int main(int, char**) {

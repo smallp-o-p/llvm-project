@@ -22,24 +22,21 @@
 
 using id = std::text_encoding::id;
 
-constexpr bool id_ctor(id i, id expect_id, std::string_view expect_name) {
+constexpr void id_ctor(id i, id expect_id, std::string_view expect_name) {
   std::text_encoding te = std::text_encoding(i);
 
   assert(te.mib() == expect_id);
   assert(expect_name == te.name());
   assert(std::ranges::contains(te.aliases(), expect_name));
-
-  return true;
 }
 
-constexpr bool id_ctors() {
+constexpr void id_ctors() {
   for (auto pair : unique_encoding_data) {
-    assert(id_ctor(id(pair.mib), id(pair.mib), pair.name));
+    id_ctor(id(pair.mib), id(pair.mib), pair.name);
   }
-  return true;
 }
 
-constexpr bool test_unknown_other() {
+constexpr void test_unknown_other() {
   {
     std::text_encoding te = std::text_encoding(id::other);
 
@@ -55,18 +52,17 @@ constexpr bool test_unknown_other() {
     assert(std::string_view("") == te.name());
     assert(std::ranges::empty(te.aliases()));
   }
-  return true;
 }
 
 constexpr bool tests() {
   {
     // 2. Constructing an object with a valid id must set mib() and the name to the corresponding value.
-    assert(id_ctors());
+    id_ctors();
   }
 
   {
     // 3. Constructing an object using id::unknown or id::other must set mib() to id::unknown or id::other, respectively, and the name to an empty string.
-    assert(test_unknown_other());
+    test_unknown_other();
   }
 
   return true;

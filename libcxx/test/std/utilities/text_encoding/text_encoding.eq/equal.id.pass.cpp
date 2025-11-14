@@ -10,7 +10,7 @@
 
 // <text_encoding>
 
-// text_encoding operator==(const text_encoding&, id) noexcept
+// bool text_encoding::operator==(const text_encoding&, id) noexcept
 
 #include <cassert>
 #include <text_encoding>
@@ -20,13 +20,11 @@
 
 using id = std::text_encoding::id;
 
-constexpr bool test_primary_encodings() {
+constexpr void test_primary_encodings() {
   for (auto& data : unique_encoding_data) {
     std::text_encoding te = std::text_encoding(id(data.mib));
     assert(te == id(data.mib));
   }
-
-  return true;
 }
 
 constexpr bool tests() {
@@ -62,16 +60,15 @@ constexpr bool tests() {
   }
 
   {
-    assert(test_primary_encodings());
+    test_primary_encodings();
   }
 
   return true;
 }
 
 int main(int, char**) {
-  {
-    static_assert(tests());
-    assert(tests());
-  }
+  tests();
+  static_assert(tests());
+
   return 0;
 }

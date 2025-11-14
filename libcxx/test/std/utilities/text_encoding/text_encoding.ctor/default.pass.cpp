@@ -10,8 +10,6 @@
 
 // <text_encoding>
 
-// struct text_encoding
-
 // text_encoding::text_encoding() noexcept
 
 #include <cassert>

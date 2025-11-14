@@ -10,7 +10,7 @@
 
 // <text_encoding>
 
-// text_encoding text_encoding::aliases();
+// text_encoding::aliases_view;
 
 #include <concepts>
 #include <text_encoding>
