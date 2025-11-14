@@ -6,11 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// struct text_encoding::aliases_view
+// <text_encoding>
+
+// text_encoding::aliases_view::end()
 
 #include <cassert>
 #include <text_encoding>

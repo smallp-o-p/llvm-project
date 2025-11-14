@@ -1,4 +1,3 @@
-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -7,11 +6,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
 
 #include <text_encoding>
 #include <type_traits>

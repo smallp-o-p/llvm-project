@@ -6,11 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
+
+// struct text_encoding
 
 // text_encoding::text_encoding() noexcept
 

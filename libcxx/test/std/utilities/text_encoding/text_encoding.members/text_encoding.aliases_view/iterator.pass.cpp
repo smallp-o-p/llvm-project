@@ -6,11 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// text_encoding::aliases_view::__iterator
+// <text_encoding>
+
+// text_encoding::aliases_view::iterator (implementation-defined)
 
 #include <cassert>
 #include <compare>

@@ -1,4 +1,3 @@
-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -7,15 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
+
 // UNSUPPORTED: no-localization
 
-// class text_encoding
-
-// Concerns:
-// 1. Verify that text_encoding member functions are nodiscard
+// <text_encoding>
 
 #include <text_encoding>
 

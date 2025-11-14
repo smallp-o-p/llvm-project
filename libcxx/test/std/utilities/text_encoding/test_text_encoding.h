@@ -8,6 +8,7 @@
 
 #ifndef SUPPORT_TEST_TEXT_ENCODING_H
 #define SUPPORT_TEST_TEXT_ENCODING_H
+
 #include <string_view>
 
 struct encoding_data {

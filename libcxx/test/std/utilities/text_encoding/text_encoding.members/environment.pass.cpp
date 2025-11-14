@@ -6,8 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 // REQUIRES: locale.en_US.UTF-8
 
@@ -15,7 +13,7 @@
 // UNSUPPORTED: android
 // UNSUPPORTED: availability-te-environment-missing
 
-// class text_encoding
+// <text_encoding>
 
 // text_encoding text_encoding::environment();
 

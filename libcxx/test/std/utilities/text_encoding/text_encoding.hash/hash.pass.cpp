@@ -6,11 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
+
+// template <> struct hash<text_encoding>
 
 #include <cassert>
 #include <cstdint>

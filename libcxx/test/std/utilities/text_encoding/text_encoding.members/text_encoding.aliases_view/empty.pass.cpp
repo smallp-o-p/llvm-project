@@ -6,12 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 // ADDITIONAL_COMPILE_FLAGS(has-fconstexpr-steps): -fconstexpr-steps=9000000
 
-// struct text_encoding::aliases_view
+// <text_encoding>
+
+// text_encoding::aliases_view
 
 #include <cassert>
 #include <ranges>

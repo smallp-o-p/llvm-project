@@ -6,13 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
 
-// text_encoding operator==(const text_encoding&, id) _NOEXCEPT
+// text_encoding operator==(const text_encoding&, id) noexcept
 
 #include <cassert>
 #include <text_encoding>

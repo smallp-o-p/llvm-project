@@ -6,17 +6,16 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
+
 // UNSUPPORTED: no-localization
 // UNSUPPORTED: android
 // UNSUPPORTED: availability-te-environment-missing
 
-// class text_encoding
+// <text_encoding>
 
-// Concerns:
-// 1. Verify that environment() and environment_is<id>() are nodiscard.
+// text_encoding text_encoding::environment()
+
 // Split from the general [[nodiscard]] tests to accomodate no-localization builds.
 
 #include <text_encoding>

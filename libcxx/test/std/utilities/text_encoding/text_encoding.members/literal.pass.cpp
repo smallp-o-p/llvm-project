@@ -1,4 +1,3 @@
-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -7,16 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
 
 // text_encoding text_encoding::literal() noexcept;
-
-// Concerns:
-// 1. text_encoding::literal() returns the proper encoding depending on the compiler, else unknown.
 
 #include <cassert>
 #include <text_encoding>

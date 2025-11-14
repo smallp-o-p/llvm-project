@@ -6,17 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <text_encoding>
-
 // REQUIRES: std-at-least-c++26
 
-// class text_encoding
+// <text_encoding>
 
 // text_encoding text_encoding::aliases();
-
-// Concerns:
-// 1. Verify that text_encoding::aliases_view satisfies ranges::forward_range, copyable, view,
-//    ranges::random_access_range and ranges::borrowed_range
 
 #include <concepts>
 #include <text_encoding>
