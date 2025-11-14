@@ -16,7 +16,7 @@
 #include <text_encoding>
 
 constexpr bool test() {
-  auto te = std::text_encoding::literal();
+  std::text_encoding te = std::text_encoding::literal();
 #ifdef __GNUC_EXECUTION_CHARSET_NAME
   assert(std::string_view(te.name()) == std::string_view(__GNUC_EXECUTION_CHARSET_NAME));
 #elif defined(__clang_literal_encoding__)
@@ -29,9 +29,8 @@ constexpr bool test() {
 }
 
 int main(int, char**) {
-  {
-    static_assert(test());
-    assert(test());
-  }
+  test();
+  static_assert(test());
+
   return 0;
 }

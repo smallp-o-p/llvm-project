@@ -20,8 +20,12 @@
 
 constexpr bool tests() {
   // Test iterator operators.
-  auto te = std::text_encoding(std::text_encoding::ASCII); // 11 aliases
-  auto i = te.aliases().begin(), j = te.aliases().begin(), k = te.aliases().end();
+  std::text_encoding te = std::text_encoding(std::text_encoding::ASCII); // 11 aliases
+
+  auto i = te.aliases().begin();
+  auto j = te.aliases().begin();
+  auto k = te.aliases().end();
+
   static_assert(std::three_way_comparable<decltype(i), std::strong_ordering>);
 
   {
@@ -92,10 +96,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  {
-    static_assert(tests());
-    assert(tests());
-  }
+  tests();
+  static_assert(tests());
 
   return 0;
 }

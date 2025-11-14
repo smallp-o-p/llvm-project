@@ -22,26 +22,33 @@
 using id = std::text_encoding::id;
 
 constexpr bool test_other_unknown() {
-  auto te_other    = std::text_encoding(id::other);
-  auto other_range = te_other.aliases();
+  {
+    std::text_encoding te_other = std::text_encoding(id::other);
 
-  assert(std::ranges::empty(other_range));
-  assert(other_range.empty());
-  assert(!bool(other_range));
+    std::text_encoding::aliases_view other_range = te_other.aliases();
 
-  auto te_unknown    = std::text_encoding(id::unknown);
-  auto unknown_range = te_unknown.aliases();
-  assert(std::ranges::empty(unknown_range));
-  assert(unknown_range.empty());
-  assert(!bool(unknown_range));
+    assert(std::ranges::empty(other_range));
+    assert(other_range.empty());
+    assert(!bool(other_range));
+  }
+
+  {
+    std::text_encoding te_unknown = std::text_encoding(id::unknown);
+
+    std::text_encoding::aliases_view unknown_range = te_unknown.aliases();
+    assert(std::ranges::empty(unknown_range));
+    assert(unknown_range.empty());
+    assert(!bool(unknown_range));
+  }
 
   return true;
 }
 
 constexpr bool test_primary_encodings() {
   for (auto& data : unique_encoding_data) {
-    auto te    = std::text_encoding(id(data.mib));
-    auto range = te.aliases();
+    std::text_encoding te = std::text_encoding(id(data.mib));
+
+    std::text_encoding::aliases_view range = te.aliases();
 
     assert(!std::ranges::empty(range));
     assert(!range.empty());
@@ -65,9 +72,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  {
-    static_assert(tests());
-    assert(tests());
-  }
+  tests();
+  static_assert(tests());
+
   return 0;
 }

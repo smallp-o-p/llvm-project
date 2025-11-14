@@ -22,7 +22,7 @@ using id = std::text_encoding::id;
 
 constexpr bool test_primary_encodings() {
   for (auto& data : unique_encoding_data) {
-    auto te = std::text_encoding(id(data.mib));
+    std::text_encoding te = std::text_encoding(id(data.mib));
     assert(te == id(data.mib));
   }
 
@@ -32,7 +32,7 @@ constexpr bool test_primary_encodings() {
 constexpr bool tests() {
   // 1. operator==(const text_encoding&, id) must be noexcept
   {
-    auto te = std::text_encoding();
+    std::text_encoding te = std::text_encoding();
     ASSERT_NOEXCEPT(te == id::UTF8);
   }
 

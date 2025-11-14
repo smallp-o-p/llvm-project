@@ -24,9 +24,8 @@
 #include "../test_text_encoding.h"
 #include "platform_support.h"
 
-using id = std::text_encoding::id;
 int main(int, char**) {
-  auto te = std::text_encoding::environment();
+  std::text_encoding te = std::text_encoding::environment();
   // 1. Depending on the platform's default, verify that environment() returns the corresponding text encoding.
   {
 #if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -42,7 +41,7 @@ int main(int, char**) {
   {
     std::setlocale(LC_ALL, LOCALE_en_US_UTF_8);
 
-    auto te2 = std::text_encoding::environment();
+    std::text_encoding te2 = std::text_encoding::environment();
     assert(te2 != std::text_encoding::UTF8);
     assert(te == te2);
   }

@@ -22,30 +22,30 @@ bool test_te_hash() {
   using H = std::hash<T>;
 
   {
-    const T te(std::text_encoding::ASCII);
+    const T te(T::ASCII);
     const H h{};
     assert(h(te) == h(te));
     static_assert(std::is_same_v<decltype(h(te)), std::size_t>);
   }
 
   {
-    const T te1(std::text_encoding::ASCII);
-    const T te2(std::text_encoding::UTF8);
+    const T te1(T::ASCII);
+    const T te2(T::UTF8);
     const H h{};
 
     assert(h(te1) != h(te2));
   }
 
   {
-    const T te1(std::text_encoding::unknown);
-    const T te2(std::text_encoding::unknown);
+    const T te1(T::unknown);
+    const T te2(T::unknown);
     const H h{};
     assert(h(te1) == h(te2));
   }
 
   {
-    const T te1(std::text_encoding::other);
-    const T te2(std::text_encoding::other);
+    const T te1(T::other);
+    const T te2(T::other);
     const H h{};
     assert(h(te1) == h(te2));
   }
@@ -54,9 +54,7 @@ bool test_te_hash() {
 }
 
 int main(int, char**) {
-  {
-    assert(test_te_hash());
-  }
+  test_te_hash();
 
   return 0;
 }

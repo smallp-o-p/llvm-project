@@ -19,8 +19,8 @@
 #include <type_traits>
 
 constexpr bool test() {
-  constexpr auto te = std::text_encoding();
-  assert(te.mib() == std::text_encoding::id::unknown);
+  std::text_encoding te = std::text_encoding();
+  assert(te.mib() == std::text_encoding::unknown);
   assert(std::string_view("") == te.name());
 
   return true;
@@ -35,8 +35,8 @@ int main(int, char**) {
 
   // 2. Default constructing a text_encoding object makes it so that mib() == id::unknown, and its name is empty
   {
+    test();
     static_assert(test());
-    assert(test());
   }
 
   return 0;

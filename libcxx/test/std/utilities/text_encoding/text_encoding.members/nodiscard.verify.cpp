@@ -15,7 +15,7 @@
 #include <text_encoding>
 
 int main(int, char**) {
-  auto te = std::text_encoding();
+  std::text_encoding te = std::text_encoding();
   // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}
   te.mib();
   // expected-warning@+1 {{ignoring return value of function declared with 'nodiscard' attribute}}

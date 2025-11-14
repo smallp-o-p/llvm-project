@@ -20,10 +20,10 @@
 
 #include "../test_text_encoding.h"
 
-using te_id = std::text_encoding::id;
+using id = std::text_encoding::id;
 
-constexpr bool id_ctor(te_id i, te_id expect_id, std::string_view expect_name) {
-  auto te = std::text_encoding(i);
+constexpr bool id_ctor(id i, id expect_id, std::string_view expect_name) {
+  std::text_encoding te = std::text_encoding(i);
 
   assert(te.mib() == expect_id);
   assert(expect_name == te.name());
@@ -34,23 +34,24 @@ constexpr bool id_ctor(te_id i, te_id expect_id, std::string_view expect_name) {
 
 constexpr bool id_ctors() {
   for (auto pair : unique_encoding_data) {
-    assert(id_ctor(te_id(pair.mib), te_id(pair.mib), pair.name));
+    assert(id_ctor(id(pair.mib), id(pair.mib), pair.name));
   }
   return true;
 }
 
 constexpr bool test_unknown_other() {
   {
-    constexpr auto te = std::text_encoding(te_id::other);
+    std::text_encoding te = std::text_encoding(id::other);
 
-    assert(te.mib() == te_id::other);
+    assert(te.mib() == id::other);
     assert(std::string_view("") == te.name());
     assert(std::ranges::empty(te.aliases()));
   }
 
   {
-    constexpr auto te = std::text_encoding(te_id::unknown);
-    assert(te.mib() == te_id::unknown);
+    std::text_encoding te = std::text_encoding(id::unknown);
+
+    assert(te.mib() == id::unknown);
     assert(std::string_view("") == te.name());
     assert(std::ranges::empty(te.aliases()));
   }
@@ -79,8 +80,8 @@ int main(int, char**) {
   }
 
   {
+    tests();
     static_assert(tests());
-    assert(tests());
   }
 
   return 0;

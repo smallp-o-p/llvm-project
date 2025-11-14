@@ -22,7 +22,7 @@
 #include "../test_text_encoding.h"
 
 constexpr bool test_ctor(std::string_view str, std::string_view expect, std::text_encoding::id expect_id) {
-  auto te      = std::text_encoding(str);
+  std::text_encoding te = std::text_encoding(str);
   bool success = true;
 
   assert(te.mib() == expect_id);
@@ -33,7 +33,7 @@ constexpr bool test_ctor(std::string_view str, std::string_view expect, std::tex
 
 constexpr bool test_primary_encoding_spellings() {
   for (auto& data : unique_encoding_data) {
-    auto te = std::text_encoding(data.name);
+    std::text_encoding te = std::text_encoding(data.name);
 
     assert(te.mib() == std::text_encoding::id(data.mib));
     assert(te.name() == data.name);
@@ -43,7 +43,7 @@ constexpr bool test_primary_encoding_spellings() {
 
 constexpr bool test_others() {
   for (auto& name : other_names) {
-    auto te = std::text_encoding(name);
+    std::text_encoding te = std::text_encoding(name);
 
     assert(te.mib() == std::text_encoding::other);
     assert(te.name() == name);
@@ -95,8 +95,8 @@ int main(int, char**) {
   }
 
   {
+    tests();
     static_assert(tests());
-    assert(tests());
   }
 
   return 0;
