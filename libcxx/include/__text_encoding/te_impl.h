@@ -324,7 +324,7 @@ private:
       return false;
     }
 
-    // map any non-alphanumeric character to 255, skip prefix 0s, else get tolower(__n)
+    // Map any non-alphanumeric character to 255, skip prefix 0s, else get tolower(__n).
     auto __map_char = [](char __n, bool& __in_number) -> unsigned char {
       auto __to_lower = [](char __n_in) -> char {
         return (__n_in >= 'A' && __n_in <= 'Z') ? __n_in + ('a' - 'A') : __n_in;
