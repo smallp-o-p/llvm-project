@@ -34,7 +34,7 @@
 
 // glibc <langinfo.h> has a THOUSANDS_SEP macro already defined
 #ifdef THOUSANDS_SEP
-#undef THOUSANDS_SEP
+#  undef THOUSANDS_SEP
 #endif
 
 #ifdef _AIX
