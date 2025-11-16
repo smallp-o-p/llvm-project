@@ -31,11 +31,16 @@
 #include "platform_support.h" // locale name macros
 #include "test_macros.h"
 
+// glibc <langinfo.h> has a THOUSANDS_SEP macro already defined
+#ifdef THOUSANDS_SEP
+#undef THOUSANDS_SEP
+#endif
+
 #ifdef _AIX
 // the AIX libc expects U202F as LC_MONETARY thousands_sep
-#  define THOUSANDS_SEP_ L"\u202F"
+#  define THOUSANDS_SEP L"\u202F"
 #else
-#  define THOUSANDS_SEP_ L" "
+#  define THOUSANDS_SEP L" "
 #endif
 
 typedef std::money_get<char, cpp17_input_iterator<const char*> > Fn;
@@ -439,7 +444,7 @@ int main(int, char**)
             assert(ex == -1);
         }
         {   // positive
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 ");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 ");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -449,7 +454,7 @@ int main(int, char**)
           assert(ex == 123456789);
         }
         {   // negative
-          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89");
+          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -517,7 +522,7 @@ int main(int, char**)
             assert(ex == -1);
         }
         {   // positive, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"); // EURO SIGN
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"); // EURO SIGN
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -527,7 +532,7 @@ int main(int, char**)
           assert(ex == 123456789);
         }
         {   // positive, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"); // EURO SIGN
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"); // EURO SIGN
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -540,7 +545,7 @@ int main(int, char**)
         }
         {   // negative, showbase
           std::wstring v =
-              convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"); // EURO SIGN
+              convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"); // EURO SIGN
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -552,7 +557,7 @@ int main(int, char**)
           std::noshowbase(ios);
         }
         {   // negative, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR -");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR -");
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -563,7 +568,7 @@ int main(int, char**)
           std::noshowbase(ios);
         }
         {   // negative, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR -");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR -");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -599,7 +604,7 @@ int main(int, char**)
             assert(ex == -1);
         }
         {   // positive
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 ");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 ");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -609,7 +614,7 @@ int main(int, char**)
           assert(ex == 123456789);
         }
         {   // negative
-          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89");
+          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -677,7 +682,7 @@ int main(int, char**)
             assert(ex == -1);
         }
         {   // positive, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;
@@ -687,7 +692,7 @@ int main(int, char**)
           assert(ex == 123456789);
         }
         {   // positive, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR");
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -699,7 +704,7 @@ int main(int, char**)
           std::noshowbase(ios);
         }
         {   // negative, showbase
-          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR");
+          std::wstring v = convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR");
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -711,7 +716,7 @@ int main(int, char**)
           std::noshowbase(ios);
         }
         {   // negative, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 Eu-");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 Eu-");
           std::showbase(ios);
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
@@ -722,7 +727,7 @@ int main(int, char**)
           std::noshowbase(ios);
         }
         {   // negative, showbase
-          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 Eu-");
+          std::wstring v = convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 Eu-");
           typedef cpp17_input_iterator<const wchar_t*> I;
           long double ex;
           std::ios_base::iostate err = std::ios_base::goodbit;

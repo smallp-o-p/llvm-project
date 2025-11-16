@@ -32,11 +32,16 @@
 #include "platform_support.h" // locale name macros
 #include "test_macros.h"
 
+// glibc <langinfo.h> has a THOUSANDS_SEP macro already defined
+#ifdef THOUSANDS_SEP
+#undef THOUSANDS_SEP
+#endif
+
 #ifdef _AIX
 // the AIX libc expects U202F as LC_MONETARY thousands_sep
-#  define THOUSANDS_SEP_ L"\u202F"
+#  define THOUSANDS_SEP L"\u202F"
 #else
-#  define THOUSANDS_SEP_ L" "
+#  define THOUSANDS_SEP L" "
 #endif
 
 typedef std::money_put<char, cpp17_output_iterator<char*> > Fn;
@@ -299,14 +304,14 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89"));
+        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89"));
     }
     {   // negative
         long double v = -123456789;
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89"));
     }
     {   // zero, showbase
         long double v = 0;
@@ -330,7 +335,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"));
+        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"));
     }
     {   // negative, showbase
         long double v = -123456789;
@@ -338,7 +343,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"));
     }
     {   // negative, showbase, left
         long double v = -123456789;
@@ -348,7 +353,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac     "));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac     "));
         assert(ios.width() == 0);
     }
     {   // negative, showbase, internal
@@ -359,7 +364,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89      \u20ac"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89      \u20ac"));
         assert(ios.width() == 0);
     }
     {   // negative, showbase, right
@@ -370,7 +375,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), false, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"     -1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 \u20ac"));
+        assert(ex == convert_thousands_sep(L"     -1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 \u20ac"));
         assert(ios.width() == 0);
     }
 
@@ -396,14 +401,14 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89"));
+        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89"));
     }
     {   // negative
         long double v = -123456789;
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89"));
     }
     {   // zero, showbase
         long double v = 0;
@@ -427,7 +432,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR"));
+        assert(ex == convert_thousands_sep(L"1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR"));
     }
     {   // negative, showbase
         long double v = -123456789;
@@ -435,7 +440,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, '*', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR"));
     }
     {   // negative, showbase, left
         long double v = -123456789;
@@ -445,7 +450,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR   "));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR   "));
         assert(ios.width() == 0);
     }
     {   // negative, showbase, internal
@@ -456,7 +461,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89    EUR"));
+        assert(ex == convert_thousands_sep(L"-1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89    EUR"));
         assert(ios.width() == 0);
     }
     {   // negative, showbase, right
@@ -467,7 +472,7 @@ int main(int, char**)
         wchar_t str[100];
         cpp17_output_iterator<wchar_t*> iter = f.put(cpp17_output_iterator<wchar_t*>(str), true, ios, ' ', v);
         std::wstring ex(str, base(iter));
-        assert(ex == convert_thousands_sep(L"   -1" THOUSANDS_SEP_ "234" THOUSANDS_SEP_ "567,89 EUR"));
+        assert(ex == convert_thousands_sep(L"   -1" THOUSANDS_SEP "234" THOUSANDS_SEP "567,89 EUR"));
         assert(ios.width() == 0);
     }
 }
