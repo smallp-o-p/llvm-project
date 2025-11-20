@@ -54,7 +54,7 @@ constexpr void test_primary_encodings() {
   }
 }
 
-constexpr bool tests() {
+constexpr bool test() {
   // 1. An alias_view of a text_encoding object for "other" and "unknown" are empty
   {
     test_other_unknown();
@@ -69,8 +69,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  tests();
-  static_assert(tests());
+  test();
+  static_assert(test());
 
   return 0;
 }

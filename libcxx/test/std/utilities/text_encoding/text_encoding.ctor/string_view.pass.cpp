@@ -46,7 +46,7 @@ constexpr void test_others() {
   }
 }
 
-constexpr bool tests() {
+constexpr bool test() {
   // happy paths
   {
     test_primary_encoding_spellings();
@@ -90,8 +90,8 @@ int main(int, char**) {
   }
 
   {
-    tests();
-    static_assert(tests());
+    test();
+    static_assert(test());
   }
 
   return 0;

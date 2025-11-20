@@ -19,13 +19,10 @@
 
 using id = std::text_encoding::id;
 
-constexpr bool tests() {
+constexpr bool test() {
   // 1. operator==(const text_encoding&, const text_encoding&) must be noexcept
   {
-    std::text_encoding te1 = std::text_encoding();
-    std::text_encoding te2 = std::text_encoding();
-    assert(te1 == te2);
-    ASSERT_NOEXCEPT(te1 == te2);
+    ASSERT_NOEXCEPT(std::text_encoding() == std::text_encoding());
   }
 
   // 2. operator==(const text_encoding&, const text_encoding&) returns true if both text_encoding ids are equal
@@ -60,8 +57,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  tests();
-  static_assert(tests());
+  test();
+  static_assert(test());
 
   return 0;
 }

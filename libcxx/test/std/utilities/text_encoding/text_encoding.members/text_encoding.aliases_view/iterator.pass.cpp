@@ -18,7 +18,7 @@
 #include <text_encoding>
 #include <utility>
 
-constexpr bool tests() {
+constexpr bool test() {
   // Test iterator operators.
   std::text_encoding te = std::text_encoding(std::text_encoding::ASCII); // 11 aliases
 
@@ -96,8 +96,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  tests();
-  static_assert(tests());
+  test();
+  static_assert(test());
 
   return 0;
 }

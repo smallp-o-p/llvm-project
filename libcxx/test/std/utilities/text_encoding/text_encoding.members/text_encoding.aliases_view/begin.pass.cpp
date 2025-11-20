@@ -16,7 +16,7 @@
 #include <ranges>
 #include <text_encoding>
 
-constexpr bool tests() {
+constexpr bool test() {
   // 1. begin() of an aliases_view from a single text_encoding object are the same.
   {
     std::text_encoding te = std::text_encoding(std::text_encoding::UTF8);
@@ -56,8 +56,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  tests();
-  static_assert(tests());
+  test();
+  static_assert(test());
 
   return 0;
 }

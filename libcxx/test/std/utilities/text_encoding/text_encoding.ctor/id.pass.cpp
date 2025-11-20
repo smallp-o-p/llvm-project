@@ -54,7 +54,7 @@ constexpr void test_unknown_other() {
   }
 }
 
-constexpr bool tests() {
+constexpr bool test() {
   {
     // 2. Constructing an object with a valid id must set mib() and the name to the corresponding value.
     id_ctors();
@@ -76,8 +76,8 @@ int main(int, char**) {
   }
 
   {
-    tests();
-    static_assert(tests());
+    test();
+    static_assert(test());
   }
 
   return 0;

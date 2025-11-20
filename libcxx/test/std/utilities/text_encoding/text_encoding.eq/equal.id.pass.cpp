@@ -27,7 +27,7 @@ constexpr void test_primary_encodings() {
   }
 }
 
-constexpr bool tests() {
+constexpr bool test() {
   // 1. operator==(const text_encoding&, id) must be noexcept
   {
     std::text_encoding te = std::text_encoding();
@@ -67,8 +67,8 @@ constexpr bool tests() {
 }
 
 int main(int, char**) {
-  tests();
-  static_assert(tests());
+  test();
+  static_assert(test());
 
   return 0;
 }
