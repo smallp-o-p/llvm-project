@@ -359,7 +359,8 @@ private:
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __te_data* __find_encoding_data(string_view __a) {
-    _LIBCPP_ASSERT(__a.size() <= __max_name_length_, "Passing encoding name longer than max_name_length!");
+    _LIBCPP_ASSERT_ARGUMENT_WITHIN_DOMAIN(
+        __a.size() <= __max_name_length_ && !__a.contains('\0'), "invalid string passed to text_encoding(string_view)");
     const __te_data* __data_first = __text_encoding_data + 2;
     const __te_data* __data_last  = std::end(__text_encoding_data);
 
@@ -377,8 +378,9 @@ private:
   }
 
   _LIBCPP_HIDE_FROM_ABI static constexpr const __te_data* __find_encoding_data_by_id(__id __i) {
-    _LIBCPP_ASSERT(__i >= __id::other && __i <= __id::CP50220 && int_least32_t(__i) != 33 && int_least32_t(__i) != 34,
-                   "Passing invalid id to text_encoding constructor!");
+    _LIBCPP_ASSERT_ARGUMENT_WITHIN_DOMAIN(
+        ((__i >= __id::other && __i <= __id::CP50220) && ((int_least32_t(__i) != 33) && (int_least32_t(__i) != 34))),
+        "invalid text_encoding::id passed to text_encoding(id)");
     auto __found =
         std::lower_bound(std::begin(__text_encoding_data), std::end(__text_encoding_data), int_least32_t(__i));
 
