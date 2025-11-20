@@ -11,14 +11,11 @@
 // REQUIRES: std-at-least-c++26
 // REQUIRES: locale.en_US.UTF-8
 // UNSUPPORTED: no-localization
+// UNSUPPORTED: android
 
 // class locale
 
 // text_encoding encoding() const
-
-// Concerns:
-// 1. Default locale returns a text_encoding representing "ASCII"
-// 2. Locale built with en_US.UTF-8 returns text_encoding representing "UTF-8"
 
 #include <cassert>
 #include <locale>
@@ -30,8 +27,10 @@
 using id = std::text_encoding::id;
 
 int main(int, char**) {
+// FIXME: enable once locale::encoding() is implemented
 #if false
   {
+    // 1. Default locale returns a text_encoding representing "ASCII"
     std::locale loc;
 
     auto te        = loc.encoding();
@@ -41,6 +40,7 @@ int main(int, char**) {
   }
 
   {
+    // 2. Locale built with en_US.UTF-8 returns text_encoding representing "UTF-8"
     std::locale utf8Locale(LOCALE_en_US_UTF_8);
 
     auto te     = utf8Locale.encoding();
